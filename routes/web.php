@@ -6,6 +6,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\AdminCategoryController;
+use App\Http\Controllers\AdminAuthController;
 
 
 
@@ -27,7 +28,13 @@ Route::get('/admin/orders/{id}', [AdminOrderController::class, 'detail']);
 Route::post('/admin/orders/{id}/payment-status', [AdminOrderController::class, 'updatePaymentStatus']);
 Route::post('/admin/orders/{id}/mark-delivered', [AdminOrderController::class, 'markDelivered']);
 
+
+// Admin routes
+Route::get('/admin/login', [AdminAuthController::class, 'showLogin'])->name('admin.login');
+Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
+
 Route::prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminAuthController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/categories', [AdminCategoryController::class, 'index']);
     Route::post('/categories', [AdminCategoryController::class, 'store']);
     Route::get('/categories/{id}', [AdminCategoryController::class, 'show']);
@@ -41,3 +48,6 @@ Route::get('/', function () {
 });
 
 
+Route::get('/shop', function () {
+    return view('shop');
+});
