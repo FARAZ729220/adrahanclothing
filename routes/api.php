@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StorefrontController;
 use App\Http\Controllers\CartController;
@@ -7,6 +8,10 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\AdminCategoryController;
 
+
+// Route::get('/user', function (Request $request) {
+//     return $request->user();
+// })->middleware('auth:sanctum');
 
 
 Route::get('/categories', [StorefrontController::class, 'categories']);
@@ -21,6 +26,7 @@ Route::post('/cart/remove', [CartController::class, 'remove']);
 
 Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder']);
 
+
 // Admin (later protect with auth)
 Route::get('/admin/orders', [AdminOrderController::class, 'list']);
 Route::get('/admin/orders/{id}', [AdminOrderController::class, 'detail']);
@@ -34,10 +40,3 @@ Route::prefix('admin')->group(function () {
     Route::put('/categories/{id}', [AdminCategoryController::class, 'update']);
     Route::delete('/categories/{id}', [AdminCategoryController::class, 'destroy']);
 });
-
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
-
