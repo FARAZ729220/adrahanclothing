@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminAuthController extends Controller
 {
@@ -13,11 +15,9 @@ class AdminAuthController extends Controller
 
     public function admin_dashboard()
     {
+        $categories = Category::latest()->get();
 
-        $contact_count = Contact::count();
-        $portfolio_count = Portfolio::count();
-
-        return view('admin.dashboard', ['contact_count' => $contact_count,  'portfolio_count' => $portfolio_count]);
+        return view('admin.dashboard', ['categories' => $categories]);
     }
 
     public function login(Request $request)

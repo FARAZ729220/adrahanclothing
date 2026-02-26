@@ -1,22 +1,40 @@
-<!doctype html>
- <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
- <head>
-     <meta charset="UTF-8" />
-     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-     <title>{{ $title ?? 'Tech Empire | Admin' }}</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product | Admin Adrahan</title>
+    <link href="{{ asset('css/bootstrap/bootstrap.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/aos/aos.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="{{ asset('css/admin/style.css') }}" rel="stylesheet" />
 
-     <link href="{{ asset('css/bootstrap/bootstrap.min.css') }}" rel="stylesheet" />
-     <link href="{{ asset('css/aos/aos.css') }}" rel="stylesheet" />
-     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-     <link href="{{ asset('css/custom/style.css') }}" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/2.3.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+</head>
 
-     <link href="https://cdn.datatables.net/2.3.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<body>
 
- </head>
+    <header class="admin-header">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <h1 class="admin-logo">ADMIN</h1>
+            <a href="dashboard.html" class="back-link"><i class="bi bi-arrow-left"></i> Back to Products</a>
+        </div>
+    </header>
 
- <body>
-   
- </body>
 
- </html>
+    {{ $slot }}
+
+    <!-- jQuery FIRST -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- DataTables -->
+<script src="https://cdn.datatables.net/2.3.7/js/dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/2.3.7/js/dataTables.bootstrap5.min.js"></script>
+
+</body>
+
+</html>
