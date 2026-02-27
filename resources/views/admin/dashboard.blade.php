@@ -78,6 +78,7 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
+                                <th>Active</th>
                                 <th>Created</th>
                                 <th>Actions</th>
                             </tr>
@@ -87,7 +88,15 @@
                                 @foreach ($categories as $category)
                                     <tr>
                                         <td>{{ $category->name }}</td>
-                                        <td>{{ $category->created_at }}</td>
+                                         
+                                        <td>
+                                            @if ($category->is_active)
+                                                <span class="text-success">Active</span>
+                                            @else
+                                                <span class="text-danger">Not Active</span>
+                                            @endif
+                                        </td>
+                                        <td>{{ $category->created_at->format('d M Y') }}</td>
                                         <td class="table-actions">
                                             <button type="button" class="btn btn-secondary edit-btn-category"
                                                 data-bs-toggle="modal" data-bs-target="#editcategory"
@@ -291,25 +300,25 @@
 
 
     document.querySelectorAll('.category-delete-btn').forEach(button => {
-    button.addEventListener('click', function(e){
-        e.preventDefault();
-        const form = this.closest('form');
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const form = this.closest('form');
 
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "This category will be permanently deleted!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if(result.isConfirmed) {
-                form.submit();
-            }
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This category will be permanently deleted!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
         });
     });
-});
 
     function contact_delete(contactId) {
         console.log(contactId);
