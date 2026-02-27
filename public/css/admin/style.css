@@ -212,38 +212,34 @@ input[type="password"]:focus {
     color: #1a1a1a;
 }
 
-/* Admin Tables */
+/* Admin Tables Wrapper */
 .admin-table-wrapper {
     border: 1px solid #e0ddd7;
     background-color: #ffffff;
+    padding: 25px;
 }
 
-.admin-table {
-    width: 100%;
-    border-collapse: collapse;
+/* Scope styling ONLY inside wrapper */
+.admin-table-wrapper table {
     font-family: "Montserrat", sans-serif;
 }
 
-.admin-table thead {
-    border-bottom: 1px solid #e0ddd7;
-}
-
-.admin-table th {
-    text-align: left;
-    padding: 18px;
+/* Header Styling */
+.admin-table-wrapper table thead th {
     font-size: 0.65rem;
     letter-spacing: 1.5px;
     font-weight: 600;
     color: #666;
+    border-bottom: 1px solid #e0ddd7;
 }
 
-.admin-table td {
-    padding: 18px;
+/* Body Cells */
+.admin-table-wrapper table tbody td {
     font-size: 0.85rem;
-    border-bottom: 1px solid #f0ede8;
 }
 
-.admin-table tbody tr:hover {
+/* Hover */
+.admin-table-wrapper table tbody tr:hover {
     background-color: #f9f7f2;
 }
 
@@ -280,4 +276,54 @@ input[type="password"]:focus {
 .out-stock {
     color: #c0392b;
     font-weight: 600;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* DataTables Controls */
+.dataTables_wrapper .dataTables_length label,
+.dataTables_wrapper .dataTables_filter label {
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    color: #666;
+}
+
+/* Dropdown */
+.dataTables_wrapper select {
+    border: 1px solid #e0ddd7;
+    background: transparent;
+    padding: 5px 10px;
+}
+
+/* Search Input */
+.dataTables_wrapper input {
+    border: 1px solid #e0ddd7;
+    padding: 6px 12px;
+    background: transparent;
+}
+
+/* Pagination */
+.dataTables_wrapper .pagination .page-link {
+    background: transparent;
+    border: 1px solid #e0ddd7;
+    color: #666;
+    font-size: 0.75rem;
+}
+
+.dataTables_wrapper .pagination .page-item.active .page-link {
+    background-color: #1c1b1a;
+    border-color: #1c1b1a;
+    color: white;
+}
+
+.dataTables_wrapper .pagination .page-link:hover {
+    background-color: #f3f1ec;
 }

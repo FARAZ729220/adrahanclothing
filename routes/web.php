@@ -53,11 +53,10 @@ Route::prefix('admin')->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/categories/create', [AdminCategoryController::class, 'create'])->name('category.create');
-    Route::post('/categories', [AdminCategoryController::class, 'store'])->name('category.store');
-    Route::get('/categories/{id}', [AdminCategoryController::class, 'show']);
-    Route::put('/categories/{id}', [AdminCategoryController::class, 'update']);
-    Route::delete('/categories/{id}', [AdminCategoryController::class, 'destroy']);
+
+    Route::post('/categories', [AdminCategoryController::class, 'category_store'])->name('category.store');
+    Route::put('/categories/{id}', [AdminCategoryController::class, 'category_update'])->name('category.update');
+    Route::delete('/categories/{id}', [AdminCategoryController::class, 'category_destroy'])->name('category.destroy');
 
     /*
     |--------------------------------------------------------------------------
