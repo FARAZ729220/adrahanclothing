@@ -53,10 +53,23 @@ Route::prefix('admin')->group(function () {
     |--------------------------------------------------------------------------
     */
 
-
     Route::post('/categories', [AdminCategoryController::class, 'category_store'])->name('category.store');
     Route::put('/categories/{id}', [AdminCategoryController::class, 'category_update'])->name('category.update');
     Route::delete('/categories/{id}', [AdminCategoryController::class, 'category_destroy'])->name('category.destroy');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Product MANAGEMENT
+    |--------------------------------------------------------------------------
+    */
+
+    // Product Management
+    
+    Route::get('/products/create', [AdminProductController::class, 'create']);
+    Route::post('/products', [AdminProductController::class, 'store']);
+    Route::get('/products/{id}/edit', [AdminProductController::class, 'edit']);
+    Route::put('/products/{id}', [AdminProductController::class, 'update']);
+    Route::delete('/products/{id}', [AdminProductController::class, 'destroy']);
 
     /*
     |--------------------------------------------------------------------------
