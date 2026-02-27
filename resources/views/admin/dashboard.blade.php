@@ -88,7 +88,7 @@
                                 @foreach ($categories as $category)
                                     <tr>
                                         <td>{{ $category->name }}</td>
-                                         
+
                                         <td>
                                             @if ($category->is_active)
                                                 <span class="text-success">Active</span>
@@ -105,12 +105,21 @@
                                                 ✏️
                                             </button>
                                             <!-- Delete Button -->
-                                            <form method="POST" action="{{ route('category.destroy', $category->id) }}"
+                                            {{-- <form method="POST" action="{{ route('category.destroy', $category->id) }}"
                                                 style="display:inline-block;"
                                                 onsubmit="return confirm('Are you sure you want to delete this category?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger category-delete-btn">
+                                                    🗑️
+                                                </button>
+                                            </form> --}}
+                                            <form method="POST" action="{{ route('category.destroy', $category->id) }}"
+                                                style="display:inline-block;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" class="btn btn-danger category-delete-btn"
+                                                    data-id="{{ $category->id }}">
                                                     🗑️
                                                 </button>
                                             </form>
@@ -171,6 +180,9 @@
             <!-- Products Tab -->
             <div class="tab-pane fade" id="products">
                 <div class="admin-table-wrapper">
+                    <div style="display: flex; justify-content:end ">
+                        <a href="{{ route('product.create') }}" class="btn btn-secondary">Add Products </a>
+                    </div>
                     <table class="table table-hover align-middle" id="product-table">
                         <thead>
                             <tr>
@@ -182,21 +194,53 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><img src="https://via.placeholder.com/50" class="product-thumb"></td>
-                                <td>Camel Wool Overcoat</td>
-                                <td>$485</td>
-                                <td>In Stock</td>
-                                <td class="table-actions">✏️ 🗑️</td>
-                            </tr>
-                            <tr>
-                                <td><img src="https://via.placeholder.com/50" class="product-thumb"></td>
-                                <td>Cream Chinos</td>
-                                <td>$165</td>
-                                <td class="out-stock">Out of Stock</td>
-                                <td class="table-actions">✏️</td>
-                            </tr>
+                            @forelse($products as $product)
+                                <tr>
+                                    <td>
+                                        @if (!empty($product->images) && count($product->images) > 0)
+                                            <img src="{{ asset('storage/' . $product->images[0]) }}"
+                                                class="product-thumb" width="50">
+                                        @else
+                                            no image
+                                        @endif
+                                    </td>
+
+                                    <td>{{ $product->name }}</td>
+
+                                    <td>${{ number_format($product->price, 2) }}</td>
+
+                                    <td>
+                                        @if ($product->stock > 0)
+                                            {{ $product->stock }} In Stock
+                                        @else
+                                            <span class="out-stock">Out of Stock</span>
+                                        @endif
+                                    </td>
+
+                                    <td class="table-actions">
+                                        <a href="{{ route('product.edit', $product->id) }}" button type="button"
+                                            class="btn btn-secondary">✏️</a>
+
+                                        <form method="POST" action="{{ route('product.destroy', $product->id) }}"
+                                            style="display:inline-block;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="btn btn-danger product-delete-btn"
+                                                data-id="{{ $product->id }}">
+                                                🗑️
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" style="text-align:center;">
+                                        No products found.
+                                    </td>
+                                </tr>
+                            @endforelse
                         </tbody>
+
                     </table>
                 </div>
             </div>
@@ -258,51 +302,21 @@
 
 <script>
     $(document).ready(function() {
-        $('#order-table').DataTable({
+        // Initialize tables once
+        const categoryTable = $('#category-table').DataTable({
             responsive: true,
-            order: [],
-            dom: "<'row mb-3'<'col-md-6'l><'col-md-6 text-end'f>>" +
-                "<'row'<'col-12'tr>>" +
-                "<'row mt-3'<'col-md-6'i><'col-md-6 text-end'p>>"
+            order: []
         });
-
-        $('#category-table').DataTable({
+        const productTable = $('#product-table').DataTable({
             responsive: true,
-            'order': []
+            order: []
         });
 
-        $('#product-table').DataTable({
-            responsive: true,
-            'order': []
-        });
-    });
-
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const editButtons = document.querySelectorAll('.edit-btn-category');
-
-        editButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const id = this.dataset.id;
-                const name = this.dataset.name;
-                const active = this.dataset.active;
-
-                // Populate modal fields
-                document.getElementById('editCategoryName').value = name;
-                document.getElementById('editCategoryActive').checked = active == 1;
-
-                // Dynamically set the form action
-                const form = document.getElementById('editCategoryForm');
-                form.action = form.action.replace('/0', '/' + id);
-            });
-        });
-    });
-
-
-    document.querySelectorAll('.category-delete-btn').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            const form = this.closest('form');
+        // Category Delete
+        $(document).on('click', '.category-delete-btn', function() {
+            const button = $(this);
+            const form = button.closest('form');
+            const row = button.closest('tr');
 
             Swal.fire({
                 title: 'Are you sure?',
@@ -314,26 +328,72 @@
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    form.submit();
+                    $.ajax({
+                        url: form.attr('action'),
+                        type: 'POST',
+                        data: form.serialize(),
+                        success: function() {
+                            // Remove row via DataTables API
+                            categoryTable.row(row).remove().draw(false);
+                            Swal.fire('Deleted!', 'Category has been deleted.',
+                                'success');
+                        },
+                        error: function() {
+                            Swal.fire('Error!', 'Something went wrong.', 'error');
+                        }
+                    });
                 }
             });
         });
-    });
 
-    function contact_delete(contactId) {
-        console.log(contactId);
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Do you really want to delete this item?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('b_form_' + contactId).submit();
-            }
+        // Product Delete
+        $(document).on('click', '.product-delete-btn', function() {
+            const button = $(this);
+            const form = button.closest('form');
+            const row = button.closest('tr');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This product will be permanently deleted!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: form.attr('action'),
+                        type: 'POST',
+                        data: form.serialize(),
+                        success: function() {
+                            // Remove row via DataTables API
+                            productTable.row(row).remove().draw(false);
+                            Swal.fire('Deleted!', 'Product has been deleted.',
+                                'success');
+                        },
+                        error: function() {
+                            Swal.fire('Error!', 'Something went wrong.', 'error');
+                        }
+                    });
+                }
+            });
         });
-    }
+
+        // Edit Category Modal
+        const editButtons = document.querySelectorAll('.edit-btn-category');
+        editButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.dataset.id;
+                const name = this.dataset.name;
+                const active = this.dataset.active;
+
+                document.getElementById('editCategoryName').value = name;
+                document.getElementById('editCategoryActive').checked = active == 1;
+
+                const form = document.getElementById('editCategoryForm');
+                form.action = form.action.replace('/0', '/' + id);
+            });
+        });
+    });
 </script>

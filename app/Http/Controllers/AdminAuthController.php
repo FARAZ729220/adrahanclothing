@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,8 +17,9 @@ class AdminAuthController extends Controller
     public function admin_dashboard()
     {
         $categories = Category::latest()->get();
+        $products = Product::latest()->get();
 
-        return view('admin.dashboard', ['categories' => $categories]);
+        return view('admin.dashboard', ['categories' => $categories, 'products' => $products]);
     }
 
     public function login(Request $request)

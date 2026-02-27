@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AdminCategoryController;
 use App\Http\Controllers\AdminOrderController;
+use App\Http\Controllers\AdminProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -64,12 +65,13 @@ Route::prefix('admin')->group(function () {
     */
 
     // Product Management
-    
-    Route::get('/products/create', [AdminProductController::class, 'create']);
-    Route::post('/products', [AdminProductController::class, 'store']);
-    Route::get('/products/{id}/edit', [AdminProductController::class, 'edit']);
-    Route::put('/products/{id}', [AdminProductController::class, 'update']);
-    Route::delete('/products/{id}', [AdminProductController::class, 'destroy']);
+
+    Route::get('/products/create', [AdminProductController::class, 'product_create'])->name('product.create');
+    Route::post('/products', [AdminProductController::class, 'product_store'])->name('product.store');
+    Route::get('/products/{id}/edit', [AdminProductController::class, 'edit'])->name('product.edit');
+    Route::put('/products/{id}', [AdminProductController::class, 'update'])->name('product.update');
+    Route::delete('/products/{id}', [AdminProductController::class, 'product_destroy'])
+        ->name('product.destroy');
 
     /*
     |--------------------------------------------------------------------------
