@@ -18,23 +18,33 @@
     <header class="admin-header">
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <h1 class="admin-logo">ADMIN</h1>
-            <a href="{{ route('admin.dashboard') }}" class="back-link"><i class="bi bi-arrow-left"></i> Back to Dashboard</a>
+            <form action="{{ route('admin.logout') }}" method="POST">
+                @csrf
+                <button type="submit"
+                    class="nav-link-admin small text-danger border-0 bg-transparent p-0 w-100 text-start">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </button>
+            </form>
         </div>
     </header>
 
+    <div class="py-3 m-5">
+        <a href="{{ route('admin.dashboard') }}" class="back-link"><i class="bi bi-arrow-left"></i> Back to
+        Dashboard</a>
+    </div>
 
     {{ $slot }}
 
     <!-- jQuery FIRST -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-<!-- Bootstrap -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- DataTables -->
-<script src="https://cdn.datatables.net/2.3.7/js/dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/2.3.7/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/2.3.7/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.3.7/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>
 

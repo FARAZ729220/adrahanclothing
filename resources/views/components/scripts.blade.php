@@ -5,116 +5,46 @@
    <script src="{{ asset('js/aos/aos.js') }}"></script>
    <script src="{{ asset('js/validation.js') }}"></script>
 
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
    <script>
-       $(function() {
+       gsap.registerPlugin(ScrollTrigger);
 
-           // ✅ AOS init (if loaded)
-           if (typeof AOS !== "undefined") {
-               AOS.init({
-                   duration: 1000,
-                   once: true
-               });
-           }
+       document.addEventListener("DOMContentLoaded", () => {
 
-           // ✅ Navbar blur on scroll (Works on every page)
-           var $nav = $("#mainNav");
+           // Function to create the stagger animation
+           const animateCards = (triggerSelector) => {
+               const grid = document.querySelector(triggerSelector);
+               if (!grid) return;
 
-           function handleNavScroll() {
-               if (!$nav.length) return;
+               const cards = grid.querySelectorAll(".product-card-container");
 
-               if ($(window).scrollTop() > 50) {
-                   $nav.addClass("scrolled");
-               } else {
-                   $nav.removeClass("scrolled");
-               }
-           }
-
-           // run once on load + on scroll
-           handleNavScroll();
-           $(window).on("scroll", handleNavScroll);
-
-
-           // ✅ Stats Counter (Only runs if stats exists on the page)
-           var $stats = $(".stats-container");
-
-           if ($stats.length) {
-
-               function animateCounters() {
-                   $stats.find(".counter").each(function() {
-                       var $counter = $(this);
-                       var target = parseInt($counter.data("target"), 10) || 0;
-                       var speed = target > 50 ? 200 : 50; // same logic as your JS
-                       var increment = target / speed;
-                       var current = 0;
-
-                       function updateCount() {
-                           current += increment;
-
-                           if (current < target) {
-                               $counter.text(Math.ceil(current));
-                               setTimeout(updateCount, 20);
-                           } else {
-                               $counter.text(target);
-                           }
-                       }
-
-                       updateCount();
-                   });
-               }
-
-               // IntersectionObserver (If supported)
-               if ("IntersectionObserver" in window) {
-                   var observer = new IntersectionObserver(function(entries, obs) {
-                       entries.forEach(function(entry) {
-                           if (entry.isIntersecting) {
-                               animateCounters();
-                               obs.unobserve(entry.target);
-                           }
-                       });
+               gsap.fromTo(
+                   cards, {
+                       opacity: 0,
+                       y: 40
                    }, {
-                       threshold: 0.5
-                   });
-
-                   observer.observe($stats.get(0)); // ✅ jQuery element to DOM element
-               } else {
-                   // Fallback: if old browser, run immediately
-                   animateCounters();
-               }
-           }
-
-       });
-
-       $(document).ready(function() {
-
-           var $filters = $('.filter-btn');
-           var $items = $('.portfolio-item');
-
-           function filterItems(category) {
-
-               $items.removeClass('show'); // hide all first
-
-               $items.each(function() {
-                   var $item = $(this);
-
-                   if (category === 'all' || $item.data('category') === category) {
-                       // restart animation trick
-                       $item.removeClass('show');
-                       void this.offsetWidth;
-                       $item.addClass('show');
+                       opacity: 1,
+                       y: 0,
+                       duration: 0.8,
+                       stagger: 0.15, // Slightly slower stagger for a premium feel
+                       ease: "power2.out",
+                       scrollTrigger: {
+                           trigger: grid,
+                           start: "top 85%",
+                           toggleActions: "play none none none",
+                       }
                    }
-               });
-           }
+               );
+           };
 
-           // click handler
-           $filters.on('click', function() {
-               $filters.removeClass('active');
-               $(this).addClass('active');
-
-               var category = $(this).data('filter');
-               filterItems(category);
-           });
-
-           // ✅ page load pe "All" ka filter apply karo
-           filterItems('all');
+           // Apply to both sections
+           animateCards(".product-grid"); // Your Trending Now section
+           animateCards(".category-grid"); // Your Shop by Category section
        });
+
+
    </script>

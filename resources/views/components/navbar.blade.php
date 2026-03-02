@@ -1,15 +1,29 @@
-<nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">ADRAHAN CLOTHING</a>
+<nav class="navbar navbar-expand navbar-dark fixed-top custom-nav fade-in-content">
+    <div class="container-fluid px-4 px-md-5">
+        <a class="navbar-brand fw-black" href="#">Adrahan<span>.</span></a>
 
-            <div class="ms-auto d-flex align-items-center">
-                <ul class="navbar-nav d-none d-md-flex flex-row me-3">
-                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Shop</a></li>
-                </ul>
-                <a href="#" class="nav-link">
-                    <svg class="bag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                </a>
-            </div>
+        <div class="navbar-nav mx-auto">
+            <a class="nav-link px-3" href="{{ route('home') }}">Home</a>
+            <a class="nav-link px-3" href="{{ route('shop') }}">Shop</a>
         </div>
-    </nav>
+
+        <div class="navbar-icons">
+            <a href="{{ route('cart.index') }}" class="text-white opacity-75 position-relative d-inline-block">
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                    class="bi bi-bag" viewBox="0 0 16 16">
+                    <path
+                        d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z" />
+                </svg>
+
+                @php $count = count(session('cart', [])); @endphp
+
+                <span id="cartCountBadge"
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark"
+                    style="font-size: 11px; {{ $count > 0 ? '' : 'display:none;' }}">
+                    {{ $count }}
+                </span>
+            </a>
+        </div>
+    </div>
+</nav>

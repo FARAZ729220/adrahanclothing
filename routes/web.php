@@ -4,6 +4,11 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AdminCategoryController;
 use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\AdminProductController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\StorefrontController;
+use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,21 +17,21 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Route::get('/categories', [StorefrontController::class, 'categories']);
-// Route::get('/products', [StorefrontController::class, 'products']);
-// Route::get('/category/{categoryId}/products', [StorefrontController::class, 'productsByCategory']);
-// Route::get('/product/{slug}', [StorefrontController::class, 'productDetail']);
+Route::get('/', [StorefrontController::class, 'home'])->name('home');
+Route::get('/shop', [StorefrontController::class, 'shop'])->name('shop');
 
-// Route::get('/cart', [CartController::class, 'get']);
-// Route::post('/cart/add', [CartController::class, 'add']);
-// Route::post('/cart/update', [CartController::class, 'update']);
-// Route::post('/cart/remove', [CartController::class, 'remove']);
+Route::get('/product/{slug}', [StorefrontController::class, 'productShow'])->name('product.show');
 
-// Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder']);
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 
-// Route::get('/shop', function () {
-//     return view('shop');
-// });
+Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
+Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.place');
+
+Route::get('/order-success/{order_number}', [CheckoutController::class, 'success'])
+    ->name('checkout.success');
 
 /*
 |--------------------------------------------------------------------------
@@ -43,7 +48,7 @@ Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
 
     Route::get('/dashboard', [AdminAuthController::class, 'admin_dashboard'])
         ->name('admin.dashboard');
@@ -79,10 +84,16 @@ Route::prefix('admin')->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/orders', [AdminOrderController::class, 'list']);
-    Route::get('/orders/{id}', [AdminOrderController::class, 'detail']);
-    Route::post('/orders/{id}/payment-status', [AdminOrderController::class, 'updatePaymentStatus']);
-    Route::post('/orders/{id}/mark-delivered', [AdminOrderController::class, 'markDelivered']);
+    Route::get('/orders/{id}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
+
+    Route::post('/orders/{id}/payment-status', [AdminOrderController::class, 'updatePaymentStatus'])
+        ->name('admin.orders.paymentStatus');
+
+    Route::post('/orders/{id}/delivery-status', [AdminOrderController::class, 'updateDeliveryStatus'])
+        ->name('admin.orders.deliveryStatus');
+
+    Route::post('/orders/{id}/cancel', [AdminOrderController::class, 'cancel'])
+        ->name('admin.orders.cancel');
 
 });
 
@@ -91,7 +102,3 @@ Route::prefix('admin')->group(function () {
 | DEFAULT ROUTE
 |--------------------------------------------------------------------------
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});

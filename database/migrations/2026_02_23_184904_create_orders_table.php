@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('order_number')->unique();
-
+            $table->string('order_number')->nullable()->unique();
+            $table->enum('order_status', ['active', 'cancelled'])->default('active');
+            $table->timestamp('cancelled_at')->nullable();
             // customer (no login)
             $table->string('customer_name');
             $table->string('customer_email')->nullable();

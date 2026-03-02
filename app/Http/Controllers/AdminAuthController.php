@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,10 +17,51 @@ class AdminAuthController extends Controller
 
     public function admin_dashboard()
     {
+        // Lists for tables
+        $orders = Order::latest()->take(20)->get();
         $categories = Category::latest()->get();
         $products = Product::latest()->get();
 
-        return view('admin.dashboard', ['categories' => $categories, 'products' => $products]);
+        // Basic totals
+        $totalOrders = Order::count();
+        $totalCategories = Category::count();
+        $totalProducts = Product::count();
+
+        // ✅ Advanced counters
+        $totalRevenue = Order::where('order_status', 'active')
+            ->where('payment_status', 'paid')
+            ->sum('grand_total');
+
+        $pendingPayments = Order::where('order_status', 'active')
+            ->whereIn('payment_status', ['unpaid', 'pending_verification'])
+            ->count();
+
+        $pendingDeliveries = Order::where('order_status', 'active')
+            ->where('delivery_status', 'pending')
+            ->count();
+
+        $cancelledOrders = Order::where('order_status', 'cancelled')->count();
+
+        $lowStockProducts = Product::where('stock', '>', 0)
+            ->where('stock', '<=', 5)
+            ->count();
+
+        $outOfStockProducts = Product::where('stock', 0)->count();
+
+        return view('admin.dashboard', compact(
+            'orders',
+            'categories',
+            'products',
+            'totalOrders',
+            'totalCategories',
+            'totalProducts',
+            'totalRevenue',
+            'pendingPayments',
+            'pendingDeliveries',
+            'cancelledOrders',
+            'outOfStockProducts',
+            'lowStockProducts',
+        ));
     }
 
     public function login(Request $request)
@@ -48,5 +90,15 @@ class AdminAuthController extends Controller
         return back()->withErrors([
             'email' => 'Invalid credentials. Please try again.',
         ])->onlyInput('email');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('admin.login')->with('success', 'Logged out successfully.');
     }
 }

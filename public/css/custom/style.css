@@ -1,385 +1,669 @@
 :root {
-    --nav-bg: #f9f7f2;
-    /* Creamy background from image */
-    --text-white: #ffffff;
+    --primary-gradient: linear-gradient(135deg, #e023ca 0%, #4a6cf7 100%);
+    --dark-bg: #0d0115;
 }
 
 body {
+    background-color: var(--dark-bg);
+    font-family: "Inter", sans-serif;
+    color: white;
     margin: 0;
-    padding: 0;
-    overflow-x: hidden;
 }
 
-/* Navbar Styling */
-.navbar {
-    background-color: var(--nav-bg);
-    padding: 10px 40px;
-    font-family: "Montserrat", sans-serif;
-    letter-spacing: 1px;
+.fw-black {
+    font-weight: 900;
 }
 
+/* Navbar Wrapper with Glassy Blur Effect */
+.custom-nav {
+    /* Transparent background with a slight purple/dark tint */
+    background: rgba(20, 10, 30, 0.4) !important;
+
+    /* The magic that creates the blur behind the navbar */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px); /* Required for Safari/iOS */
+
+    /* Subtle border to define the glass edge */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    height: 80px;
+    display: flex;
+    align-items: center;
+    z-index: 1030;
+
+    /* Smooth transition if you add scroll effects later */
+    transition: background 0.3s ease;
+}
+
+/* Logo Styling */
 .navbar-brand {
-    font-family: "Playfair Display", serif;
-    font-weight: 500;
-    letter-spacing: 3px;
-    font-size: 1.5rem;
-    color: #333 !important;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 900;
+    font-size: 1.6rem;
+    letter-spacing: -0.5px;
+    background: linear-gradient(
+        to right,
+        #ff41f2,
+        #fff
+    ); /* Matches the pinkish logo tint */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.nav-link {
-    color: #333 !important;
+/* Centered Links Spacing and Typography */
+.navbar-nav .nav-link {
+    color: #ffffff !important;
     font-size: 0.85rem;
-    font-weight: 400;
-    margin: 0 15px;
-    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
 }
 
-/* Hero Section Styling */
+.navbar-nav .nav-link:hover {
+    opacity: 1;
+}
+
+/* Icon placement */
+.navbar-icons {
+    width: 1.6rem; /* Balances the width of the logo on the left */
+    text-align: right;
+}
+
+/* Mobile Responsiveness: Keep items on one line */
+@media (max-width: 576px) {
+    .custom-nav {
+        height: 60px;
+        padding: 0 15px;
+    }
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    .navbar-nav .nav-link {
+        padding: 0 10px !important;
+        font-size: 0.75rem;
+    }
+}
+
+/* Hero Section Background */
 .hero-section {
+    height: 100vh;
+    width: 100%;
     position: relative;
-    height: 60vh;
-    /* Adjust height as needed */
-    background:
-        linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
-        url("https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=2574&auto=format&fit=crop")
-            no-repeat center center;
+    /* This background image uses a montage of streetwear models */
+    background-image: url("https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&q=80&w=1920");
     background-size: cover;
+    background-position: center;
+    overflow: hidden;
+}
+
+/* The Gradient Overlay that gives it the Purple/Blue hue */
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to right,
+        rgba(82, 0, 107, 0.85),
+        rgba(46, 0, 145, 0.85)
+    );
+    mix-blend-mode: multiply; /* Crucial for that "wash" effect */
+}
+
+/* Typography Effects */
+h1 {
+    font-family: "Montserrat", sans-serif;
+    line-height: 0.9;
+}
+
+.gradient-text {
+    background: linear-gradient(to right, #ff41f2, #3eb7ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.tracking-widest {
+    letter-spacing: 0.3em;
+    color: #ff41f2;
+}
+
+.hero-subtext {
+    max-width: 500px;
+    font-size: 1.1rem;
+}
+
+/* The Glowing Button */
+.btn-gradient {
+    background: linear-gradient(to right, #e023ca, #4a6cf7);
+    border: none;
+    color: white;
+    position: relative;
+    font-weight: 700;
+    transition: transform 0.2s ease;
+
+    /* Initial Glow: Equal shadow on all sides */
+    box-shadow:
+        0 0 15px rgba(224, 35, 202, 0.6),
+        0 0 30px rgba(74, 108, 247, 0.4);
+
+    /* Attach the flicker animation */
+    animation: fast-flicker 0.15s infinite alternate;
+}
+
+/* Hover effect to make it feel interactive */
+.btn-gradient:hover {
+    transform: scale(1.05);
+    color: white;
+    /* Stronger glow on hover */
+    box-shadow:
+        0 0 25px rgba(224, 35, 202, 0.8),
+        0 0 50px rgba(74, 108, 247, 0.6);
+}
+
+/* Fast Flicker Animation Logic */
+@keyframes fast-flicker {
+    0% {
+        opacity: 1;
+        box-shadow:
+            0 0 15px rgba(224, 35, 202, 0.6),
+            0 0 30px rgba(74, 108, 247, 0.4);
+    }
+    100% {
+        /* Slightly reduces opacity and shadow to create the 'flicker' */
+        opacity: 0.9;
+        box-shadow:
+            0 0 8px rgba(224, 35, 202, 0.3),
+            0 0 15px rgba(74, 108, 247, 0.2);
+    }
+}
+
+.z-index-1 {
+    z-index: 1;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .display-1 {
+        font-size: 3.5rem;
+    }
+    .hero-subtext {
+        font-size: 0.95rem;
+    }
+}
+
+/* 1. Define the Fade-In Keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 2. Apply the animation to content */
+.fade-in-content {
+    opacity: 0; /* Hidden by default */
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* 3. Staggered Delays for a premium feel */
+.delay-1 {
+    animation-delay: 0.2s;
+}
+.delay-2 {
+    animation-delay: 0.4s;
+}
+.delay-3 {
+    animation-delay: 0.6s;
+}
+.delay-4 {
+    animation-delay: 0.8s;
+}
+
+/* Trending Section - Deep Black Background */
+.trending-section {
+    background-color: #000;
+}
+
+/* Card Container Spacing */
+.product-grid {
+    /* Manual override for that "Wide" image look */
+    --bs-gutter-x: 2rem;
+}
+
+@media (min-width: 992px) {
+    .product-grid {
+        --bs-gutter-x: 3rem;
+    } /* Matches the wide gaps in your image */
+}
+
+/* The White Card */
+.product-card {
+    background: #ffffff;
+    border-radius: 15px; /* Subtle roundness from image */
+    padding: 25px; /* Space around the product */
+    aspect-ratio: 1 / 1; /* Makes them perfect squares like the image */
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    color: var(--text-white);
-}
-
-.hero-content h1 {
-    font-family: "Playfair Display", serif;
-    font-size: clamp(3rem, 8vw, 6rem);
-    /* Responsive font size */
-    font-weight: 400;
-    margin-bottom: 10px;
-}
-
-.hero-content p {
-    font-family: "Montserrat", sans-serif;
-    font-size: 0.9rem;
-    letter-spacing: 5px;
-    font-weight: 400;
-    margin-bottom: 40px;
-    text-transform: uppercase;
-}
-
-.btn-explore {
-    font-family: "Montserrat", sans-serif;
-    background: transparent;
-    color: white;
-    border: 1px solid white;
-    padding: 12px 35px;
-    font-size: 0.75rem;
-    letter-spacing: 3px;
-    border-radius: 0;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-}
-
-.btn-explore:hover {
-    background: white;
-    color: black;
-}
-
-/* Shopping bag icon custom size */
-.bag-icon {
-    width: 20px;
-    height: 20px;
-}
-
-.new-arrivals-section {
-    background-color: #f9f7f2; /* Cream background */
-    padding: 40px 0;
-}
-
-.section-title {
-    font-family: "Playfair Display", serif;
-    font-size: 2.5rem;
-    font-weight: 500;
-    margin-bottom: 5px;
-    color: #1a1a1a;
-}
-
-.section-subtitle {
-    font-family: "Montserrat", sans-serif;
-    font-size: 0.85rem;
-    color: #666;
-    text-transform: capitalize;
-}
-
-/* Product Card Styling */
-.product-card {
+    overflow: hidden;
+    border: none;
     transition: transform 0.3s ease;
 }
 
-.product-image-wrapper {
-    position: relative;
-    background-color: #ebebeb; /* Placeholder color while images load */
-    aspect-ratio: 3/4; /* Maintains standard clothing shot ratio */
-    overflow: hidden;
-    margin-bottom: 15px;
-}
-
-.product-image-wrapper img {
+.product-card .img-wrapper {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.5s ease;
 }
 
-.badge-custom {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: #1a1a1a;
-    color: white;
-    font-family: "Montserrat", sans-serif;
-    font-size: 0.65rem;
-    padding: 4px 8px;
-    letter-spacing: 1px;
-    z-index: 2;
+.product-card img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
 }
 
-.product-info {
-    text-align: left;
+/* Hover Effect: Image slightly gets bigger */
+.product-card-container:hover .img-wrapper {
+    transform: scale(1.1);
 }
 
-.product-name {
-    font-family: "Playfair Display", serif;
-    font-size: 1rem;
-    margin-bottom: 5px;
-    font-weight: 400;
-    color: #333;
+/* Typography & Colors */
+.tiny-text {
+    font-size: 17px;
+    letter-spacing: 1.2px;
 }
 
 .product-price {
-    font-family: "Montserrat", sans-serif;
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: #1a1a1a;
+    color: #ff00ff; /* Neon Pink from the image */
 }
 
-/* Button Styling */
-.btn-view-all {
-    font-family: "Montserrat", sans-serif;
+/* View All Button Styling */
+.btn-outline-pink {
     background: transparent;
-    color: #1a1a1a;
-    border: 1px solid #1a1a1a;
-    padding: 10px 40px;
-    font-size: 0.75rem;
-    letter-spacing: 2px;
-    border-radius: 0;
+    color: #ff00ff;
+    border: 2px solid #ff00ff;
+    min-width: 180px;
     transition: all 0.3s ease;
 }
 
-.btn-view-all:hover {
-    background: #1a1a1a;
-    color: white;
+.btn-outline-pink:hover {
+    color: #fff;
+    background: #ff00ff;
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.6); /* Neon Glow */
 }
 
-/* Mobile adjustments */
-@media (max-width: 768px) {
-    .section-title {
-        font-size: 2rem;
+/* Mobile Adjustments */
+@media (max-width: 576px) {
+    .product-card {
+        padding: 15px;
     }
-    .product-name {
-        font-size: 0.9rem;
+    .tiny-text {
+        font-size: 0.6rem;
     }
 }
 
-/* Category Section Styles */
+/* Category Section Styling */
 .category-section {
-    background-color: #f9f7f2;
+    background-color: #000;
 }
 
 .category-card {
     position: relative;
-    aspect-ratio: 1 / 1.2;
+    border-radius: 20px;
     overflow: hidden;
-    cursor: pointer;
+    aspect-ratio: 1 / 1;
 }
 
-.category-card img,
-.placeholder-grey {
+.category-card img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
 }
 
-.placeholder-grey {
-    background-color: #c2c2c2;
+.category-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(
+        0,
+        0,
+        0,
+        0.4
+    ); /* Darkens image slightly for text contrast */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
 }
 
 .category-card:hover img {
-    transform: scale(1.05);
+    transform: scale(1.1);
 }
 
-.category-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 15px;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.3));
-}
-
-.category-label {
-    color: white;
-    font-family: "Montserrat", sans-serif;
-    font-size: 0.7rem;
-    font-weight: 500;
+.category-card h3 {
+    font-size: 1.25rem;
     letter-spacing: 1px;
-}
-
-/* --- Page Header & Filter --- */
-.collection-header {
-    padding: 80px 0 40px;
-}
-.collection-title {
-    font-family: "Playfair Display", serif;
-    font-size: 2.5rem;
-    margin-bottom: 30px;
-}
-.filter-btn {
-    background: transparent;
-    border: 1px solid #ddd;
-    padding: 8px 20px;
-    font-size: 0.65rem;
-    letter-spacing: 1.5px;
     text-transform: uppercase;
-    margin: 5px;
-    border-radius: 0;
-    transition: 0.3s;
-}
-.filter-btn.active {
-    background: var(--text-dark);
-    color: white;
-    border-color: var(--text-dark);
-}
-.filter-btn:hover:not(.active) {
-    border-color: var(--text-dark);
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
-/* --- Product Grid --- */
-.product-card {
-    margin-bottom: 40px;
-}
-.img-container {
-    position: relative;
-    aspect-ratio: 3/4;
-    background-color: #eee;
-    overflow: hidden;
-    margin-bottom: 15px;
-}
-.img-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.badge-sale {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: #1a1a1a;
-    color: white;
-    font-size: 0.6rem;
-    padding: 4px 8px;
-    letter-spacing: 1px;
-}
-.product-name {
-    font-family: "Playfair Display", serif;
-    font-size: 0.95rem;
-    margin-bottom: 5px;
-}
-.product-price {
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-.old-price {
-    text-decoration: line-through;
-    color: #999;
-    margin-right: 8px;
-}
-
-/* Footer Styles */
+/* Footer Styling */
 .footer-section {
-    background-color: #f9f7f2;
-    padding: 80px 0 40px 0;
-    border-top: 1px solid #eee;
+    background-color: #0b0b0b; /* Slightly lighter black than section for separation */
+    padding: 80px 0 40px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.footer-logo {
-    font-family: "Playfair Display", serif;
-    font-size: 1.1rem;
-    letter-spacing: 2px;
-    margin-bottom: 20px;
+.footer-desc {
+    line-height: 1.8;
 }
 
-.footer-about {
-    font-family: "Montserrat", sans-serif;
-    font-size: 0.85rem;
-    color: #666;
-    line-height: 1.6;
-}
-
-.footer-heading {
-    font-family: "Montserrat", sans-serif;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    margin-bottom: 25px;
-    color: #333;
-}
-
-.footer-links li,
-.footer-contact li {
-    margin-bottom: 12px;
-    font-family: "Montserrat", sans-serif;
-    font-size: 0.85rem;
-    color: #666;
-}
-
-.footer-links a {
+.footer-link {
+    color: rgba(255, 255, 255, 0.6);
     text-decoration: none;
-    color: inherit;
-    transition: color 0.3s;
+    font-size: 0.85rem;
+    transition: color 0.3s ease;
+    display: block;
+    margin-bottom: 8px;
 }
 
-.footer-links a:hover {
-    color: #000;
+.footer-link:hover {
+    color: #ff00ff;
 }
 
-.footer-bottom {
-    margin-top: 80px;
-    padding-top: 20px;
-    border-top: 1px solid #e0ddd7;
+.social-icons {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
 }
 
-.footer-bottom p {
-    font-family: "Montserrat", sans-serif;
-    font-size: 0.7rem;
-    color: #999;
-    letter-spacing: 0.5px;
-}
-
-/* Adjusting grid for 5 items */
-@media (min-width: 768px) {
-    .col-md {
-        flex: 0 0 20%;
-        max-width: 20%;
+@media (max-width: 768px) {
+    .social-icons {
+        justify-content: flex-start;
     }
 }
 
+.social-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: all 0.3s ease;
+}
 
+.social-circle:hover {
+    background: #ff00ff;
+    border-color: #ff00ff;
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+}
 
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
 
+/* Price and Stock Typography */
+.old-price {
+    font-size: 13px;
+    opacity: 0.6;
+}
 
+.product-price {
+    color: #ff00ff; /* Neon Pink */
+    font-size: 15px;
+}
 
+.stock-text {
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
+}
 
+/* Ensure the info text aligns perfectly with the card edges */
+.product-info {
+    padding: 0 5px;
+}
 
+/* Specific Montserrat font for the clean streetwear look */
+.product-name,
+.product-price,
+.stock-text {
+    font-family: "Montserrat", sans-serif;
+}
 
+/* Filter Button Styling */
+.filter-btn {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-radius: 50px;
+    padding: 8px 25px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.filter-btn.active {
+    background: #ff00ff; /* Neon Pink */
+    color: white;
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.6);
+}
+
+/* Empty Cart Section Styling */
+.empty-cart-section {
+    background-color: #000;
+}
+
+.cart-icon-wrapper {
+    color: #444; /* Subtle grey icon */
+}
+
+/* Gradient Button - Matches the "Explore" button style */
+.btn-gradient {
+    background: linear-gradient(90deg, #ff33ff, #6633ff);
+    color: white;
+    border: none;
+    transition: transform 0.3s ease;
+}
+
+.btn-gradient:hover {
+    transform: scale(1.05);
+    color: white;
+    box-shadow: 0 0 20px rgba(255, 51, 255, 0.4);
+}
+
+/* Product Detail Page Specifics */
+.badge-discount {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: #ff00ff; /* Neon Pink */
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 6px 12px;
+    border-radius: 50px;
+    z-index: 10;
+}
+
+.product-price-large {
+    color: #ff00ff;
+    font-weight: 900;
+}
+
+/* Size and Quantity Controls */
+.size-btn {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    width: 45px;
+    height: 40px;
+    font-size: 0.75rem;
+    transition: all 0.3s;
+}
+
+.size-btn.active,
+.size-btn:hover {
+    border-color: #ff00ff;
+    color: #ff00ff;
+    background: rgba(255, 0, 255, 0.1);
+}
+
+.qty-control {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 8px;
+    width: 35px;
+    height: 35px;
+}
+
+/* Outline Button */
+.btn-outline-pink {
+    border: 2px solid #ff00ff;
+    color: #ff00ff;
+    transition: all 0.3s;
+}
+
+.btn-outline-pink:hover {
+    background: #ff00ff;
+    color: white;
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.4);
+}
+
+.product-detail-img {
+    height: 450px;
+    object-fit: cover;
+}
+@media (max-width: 768px) {
+    .product-detail-img {
+        height: 320px;
+    }
+}
+
+/* Product Detail Page Specifics */
+.badge-discount {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: #ff00ff; /* Neon Pink */
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 6px 12px;
+    border-radius: 50px;
+    z-index: 10;
+}
+
+.product-price-large {
+    color: #ff00ff;
+    font-weight: 900;
+}
+
+/* Size and Quantity Controls */
+.size-btn {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    width: 45px;
+    height: 40px;
+    font-size: 0.75rem;
+    transition: all 0.3s;
+}
+
+.size-btn.active,
+.size-btn:hover {
+    border-color: #ff00ff;
+    color: #ff00ff;
+    background: rgba(255, 0, 255, 0.1);
+}
+
+.qty-control {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 8px;
+    width: 35px;
+    height: 35px;
+}
+
+/* Outline Button */
+.btn-outline-pink {
+    border: 2px solid #ff00ff;
+    color: #ff00ff;
+    transition: all 0.3s;
+}
+
+.btn-outline-pink:hover {
+    background: #ff00ff;
+    color: white;
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.4);
+}
+
+/* Cart Page Styling */
+.cart-section {
+    background-color: #000;
+    min-height: 100vh;
+}
+
+.cart-item-card {
+    background: #111; /* Dark grey card background */
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.order-summary-box {
+    background: #111; /* Matching card background */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.text-pink {
+    color: #ff00ff; /* Neon Pink pricing */
+}
+
+/* Gradient Button - reusing the style from the product detail page */
+.btn-gradient {
+    background: linear-gradient(90deg, #ff33ff, #6633ff);
+    color: white;
+    transition: transform 0.3s ease;
+}
+
+/* Success Page Styling */
+.success-section {
+    background-color: #000;
+}
+
+.icon-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(
+        135deg,
+        #ff33ff,
+        #6633ff
+    ); /* Gradient matching your brand */
+    color: white;
+}
+
+/* Ensure the success text remains readable and aligned */
+.text-light.opacity-75 {
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}

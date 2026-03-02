@@ -5,17 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class AdminCategoryController extends Controller
 {
     public function category_store(Request $request)
     {
-        // 1️⃣ Validate input
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:100'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
 
-        // 2️⃣ Generate unique slug
+        // Unique slug
         $slugBase = Str::slug($validated['name']);
         $slug = $slugBase;
         $counter = 1;
@@ -25,15 +26,20 @@ class AdminCategoryController extends Controller
             $counter++;
         }
 
-        // 3️⃣ Create category
+        // Upload image
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('categories', 'public');
+        }
+
         Category::create([
             'name' => $validated['name'],
             'slug' => $slug,
-            'is_active' => $request->has('is_active'), // checkbox handling
+            'image' => $imagePath,
+            'is_active' => $request->has('is_active'),
         ]);
 
         return redirect()->route('admin.dashboard')->with('success', 'Category Created successfully.');
-
     }
 
     public function category_update(Request $request, $id)
@@ -42,12 +48,11 @@ class AdminCategoryController extends Controller
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:100'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'remove_image' => ['nullable', 'boolean'],
         ]);
 
-        $category->name = $validated['name'];
-        $category->is_active = $request->has('is_active');
-
-        // Optional: update slug if name changes
+        // Update slug (unique)
         $slugBase = Str::slug($validated['name']);
         $slug = $slugBase;
         $counter = 1;
@@ -56,8 +61,24 @@ class AdminCategoryController extends Controller
             $slug = $slugBase.'-'.$counter;
             $counter++;
         }
-        $category->slug = $slug;
 
+        // Remove image if checkbox checked
+        if ($request->boolean('remove_image') && $category->image) {
+            Storage::disk('public')->delete($category->image);
+            $category->image = null;
+        }
+
+        // Replace image if new uploaded
+        if ($request->hasFile('image')) {
+            if ($category->image) {
+                Storage::disk('public')->delete($category->image);
+            }
+            $category->image = $request->file('image')->store('categories', 'public');
+        }
+
+        $category->name = $validated['name'];
+        $category->slug = $slug;
+        $category->is_active = $request->has('is_active');
         $category->save();
 
         return redirect()->back()->with('success', 'Category updated successfully.');
@@ -66,6 +87,11 @@ class AdminCategoryController extends Controller
     public function category_destroy($id)
     {
         $category = Category::findOrFail($id);
+
+        if ($category->image) {
+            Storage::disk('public')->delete($category->image);
+        }
+
         $category->delete();
 
         return redirect()->back()->with('success', 'Category deleted successfully.');

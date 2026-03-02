@@ -26,6 +26,7 @@ class Product extends Model
         'is_active' => 'boolean',
     ];
 
+    
     // visible on frontend
     public function scopeVisible($q)
     {
@@ -46,4 +47,9 @@ class Product extends Model
 
         return max(0, $this->price - $discount);
     }
+
+   public function category()
+{
+    return $this->belongsTo(\App\Models\Category::class);
+}
 }

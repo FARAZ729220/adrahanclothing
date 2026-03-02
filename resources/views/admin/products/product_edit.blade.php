@@ -102,7 +102,7 @@
 
                         <div class="col-12 mt-4 d-flex gap-3">
                             <button type="submit" class="btn-save" id="saveBtn">UPDATE PRODUCT</button>
-                            <a href="{{ url('admin/products') }}" class="btn-cancel">CANCEL</a>
+                            <a href="{{ route('admin.dashboard') }}" class="btn-cancel">CANCEL</a>
                         </div>
 
                     </div>

@@ -1,6 +1,91 @@
 <x-admin.layout>
     <main class="container my-5">
 
+        <!-- Dashboard Counters -->
+
+        <div class="row mb-4 g-3">
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted">Total Orders</h6>
+                        <h1 class="fw-bold text-dark">{{ $totalOrders }}</h1>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted">Total Categories</h6>
+                        <h1 class="fw-bold text-dark">{{ $totalCategories }}</h1>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted">Total Products</h6>
+                        <h1 class="fw-bold text-dark">{{ $totalProducts }}</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted">Low Stock (≤5)</h6>
+                        <h1 class="fw-bold text-warning">{{ $lowStockProducts }}</h1>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted">Out of Stock</h6>
+                        <h1 class="fw-bold text-danger">{{ $outOfStockProducts }}</h1>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted">Total Revenue (Paid)</h6>
+                        <h1 class="fw-bold text-dark">Rs {{ number_format($totalRevenue) }}</h1>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted">Pending Payments</h6>
+                        <h1 class="fw-bold text-dark">{{ $pendingPayments }}</h1>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted">Pending Deliveries</h6>
+                        <h1 class="fw-bold text-dark">{{ $pendingDeliveries }}</h1>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted">Cancelled Orders</h6>
+                        <h1 class="fw-bold text-dark">{{ $cancelledOrders }}</h1>
+                    </div>
+                </div>
+            </div>
+
+        </div>
 
         <!-- Tabs -->
         <ul class="nav nav-underline mb-4" id="adminTabs" role="tablist">
@@ -39,26 +124,39 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1001</td>
-                                <td>John Doe</td>
-                                <td>$485</td>
-                                <td><span class="status-badge completed">Completed</span></td>
-                                <td>26 Feb 2026</td>
-                                <td class="table-actions">
-                                    ✏️ 🗑️
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>1002</td>
-                                <td>Sarah Smith</td>
-                                <td>$210</td>
-                                <td><span class="status-badge pending">Pending</span></td>
-                                <td>25 Feb 2026</td>
-                                <td class="table-actions">
-                                    ✏️ 🗑️
-                                </td>
-                            </tr>
+                            @forelse($orders as $order)
+                                <tr>
+                                    <td>{{ $order->order_number }}</td>
+
+                                    <td>
+                                        {{ $order->customer_name }} <br>
+                                        <small>{{ $order->customer_phone }}</small>
+                                    </td>
+
+                                    <td>Rs {{ $order->grand_total }}</td>
+
+
+
+                                    <td>
+                                        @if ($order->order_status === 'cancelled')
+                                            <span class="status-badge pending">Cancelled</span>
+                                        @elseif($order->delivery_status === 'done')
+                                            <span class="status-badge completed">Completed</span>
+                                        @elseif($order->payment_status === 'pending_verification')
+                                            <span class="status-badge pending">Pending Verification</span>
+                                        @else
+                                            <span class="status-badge pending">Pending</span>
+                                        @endif
+                                    </td>
+
+                                    <td>{{ $order->created_at->format('d M Y') }}</td>
+
+                                    <td class="table-actions">
+                                        <a href="{{ route('admin.orders.show', $order->id) }}">👁️</a>
+                                    </td>
+                                </tr>
+                            @empty
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -78,56 +176,54 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
+                                <th>Image</th>
                                 <th>Active</th>
                                 <th>Created</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @if ($categories->count() > 0)
-                                @foreach ($categories as $category)
-                                    <tr>
-                                        <td>{{ $category->name }}</td>
+                            @forelse($categories as $category)
+                                <tr>
+                                    <td>{{ $category->name }}</td>
+                                    <td>
+                                        @if ($category->image)
+                                            <img src="{{ asset('storage/' . $category->image) }}" width="50"
+                                                style="border-radius:6px;">
+                                        @else
+                                            No Image
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($category->is_active)
+                                            <span class="text-success">Active</span>
+                                        @else
+                                            <span class="text-danger">Not Active</span>
+                                        @endif
+                                    </td>
+                                    <td>{{ $category->created_at->format('d M Y') }}</td>
+                                    <td class="table-actions">
+                                        <button type="button" class="btn btn-secondary edit-btn-category"
+                                            data-bs-toggle="modal" data-bs-target="#editcategory"
+                                            data-id="{{ $category->id }}" data-name="{{ $category->name }}"
+                                            data-active="{{ $category->is_active ? 1 : 0 }}"
+                                            data-image="{{ $category->image ? asset('storage/' . $category->image) : '' }}">
+                                            ✏️
+                                        </button>
 
-                                        <td>
-                                            @if ($category->is_active)
-                                                <span class="text-success">Active</span>
-                                            @else
-                                                <span class="text-danger">Not Active</span>
-                                            @endif
-                                        </td>
-                                        <td>{{ $category->created_at->format('d M Y') }}</td>
-                                        <td class="table-actions">
-                                            <button type="button" class="btn btn-secondary edit-btn-category"
-                                                data-bs-toggle="modal" data-bs-target="#editcategory"
-                                                data-id="{{ $category->id }}" data-name="{{ $category->name }}"
-                                                data-active="{{ $category->is_active ? 1 : 0 }}">
-                                                ✏️
+                                        <form method="POST" action="{{ route('category.destroy', $category->id) }}"
+                                            style="display:inline-block;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="btn btn-danger category-delete-btn"
+                                                data-id="{{ $category->id }}">
+                                                🗑️
                                             </button>
-                                            <!-- Delete Button -->
-                                            {{-- <form method="POST" action="{{ route('category.destroy', $category->id) }}"
-                                                style="display:inline-block;"
-                                                onsubmit="return confirm('Are you sure you want to delete this category?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger category-delete-btn">
-                                                    🗑️
-                                                </button>
-                                            </form> --}}
-                                            <form method="POST" action="{{ route('category.destroy', $category->id) }}"
-                                                style="display:inline-block;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" class="btn btn-danger category-delete-btn"
-                                                    data-id="{{ $category->id }}">
-                                                    🗑️
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @endif
-
+                                        </form>
+                                    </td>
+                                </tr>
+                            @empty
+                            @endforelse
                         </tbody>
                     </table>
 
@@ -136,7 +232,8 @@
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <form id="editCategoryForm" method="POST"
-                                    action="{{ route('category.update', ['id' => 0]) }}">
+                                    action="{{ route('category.update', ['id' => 0]) }}"
+                                    enctype="multipart/form-data">
                                     @csrf
                                     @method('PUT')
 
@@ -150,9 +247,34 @@
                                         style="background:#fff; padding:15px; border:1px solid #ddd; border-radius:6px;">
                                         <div style="margin-bottom:12px;">
                                             <label style="display:block; margin-bottom:6px;">Category Name</label>
-                                            <input type="text" name="name" id="editCategoryName" value=""
-                                                required
+                                            <input type="text" name="name" id="editCategoryName"
+                                                value="" required
                                                 style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;">
+                                        </div>
+
+                                        <div style="margin-bottom:12px;">
+                                            <label style="display:block; margin-bottom:6px;">Current Image</label>
+
+                                            <img id="editCategoryPreview" src="" alt="Category Image"
+                                                style="width:80px; height:80px; object-fit:cover; border-radius:8px; border:1px solid #ddd; display:none;">
+
+                                            <div id="editCategoryNoImage" style="color:#888; font-size:14px;">
+                                                No Image
+                                            </div>
+                                        </div>
+
+                                        <div style="margin-bottom:12px;">
+                                            <label style="display:block; margin-bottom:6px;">New Image
+                                                (optional)</label>
+                                            <input type="file" name="image" accept="image/*"
+                                                style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;">
+                                        </div>
+
+                                        <div style="margin-bottom:12px;">
+                                            <label style="display:flex; gap:8px; align-items:center;">
+                                                <input type="checkbox" name="remove_image" value="1">
+                                                Remove current image
+                                            </label>
                                         </div>
 
                                         <div style="margin-bottom:12px;">
@@ -183,6 +305,7 @@
                     <div style="display: flex; justify-content:end ">
                         <a href="{{ route('product.create') }}" class="btn btn-secondary">Add Products </a>
                     </div>
+
                     <table class="table table-hover align-middle" id="product-table">
                         <thead>
                             <tr>
@@ -190,38 +313,47 @@
                                 <th>Name</th>
                                 <th>Price</th>
                                 <th>Stock</th>
-                                <th></th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($products as $product)
                                 <tr>
+                                    <!-- Image -->
                                     <td>
-                                        @if (!empty($product->images) && count($product->images) > 0)
-                                            <img src="{{ asset('storage/' . $product->images[0]) }}"
-                                                class="product-thumb" width="50">
+                                        @if (!empty($product->images) && is_array($product->images) && count($product->images) > 0)
+                                            <img src="{{ asset('storage/' . $product->images[0]) }}" width="50"
+                                                class="product-thumb">
                                         @else
-                                            no image
+                                            No Image
                                         @endif
                                     </td>
 
-                                    <td>{{ $product->name }}</td>
+                                    <!-- Name -->
+                                    <td>{{ $product->name ?? '—' }}</td>
 
-                                    <td>${{ number_format($product->price, 2) }}</td>
+                                    <!-- Price -->
+                                    <td>${{ number_format($product->price ?? 0, 2) }}</td>
 
+                                    <!-- Stock -->
                                     <td>
-                                        @if ($product->stock > 0)
-                                            {{ $product->stock }} In Stock
+                                        @if ($product->stock == 0)
+                                            <span class="badge bg-danger">Out of Stock</span>
+                                        @elseif($product->stock <= 5)
+                                            <span class="badge bg-warning text-dark">Low
+                                                ({{ $product->stock }})
+                                            </span>
                                         @else
-                                            <span class="out-stock">Out of Stock</span>
+                                            <span class="badge bg-success">{{ $product->stock }} In Stock</span>
                                         @endif
                                     </td>
 
+                                    <!-- Actions -->
                                     <td class="table-actions">
-                                        <a href="{{ route('product.edit', $product->id) }}" button type="button"
+                                        <a href="{{ route('product.edit', $product->id) }}"
                                             class="btn btn-secondary">✏️</a>
 
-                                        <form method="POST" action="{{ route('product.destroy', $product->id) }}"
+                                        <form action="{{ route('product.destroy', $product->id) }}" method="POST"
                                             style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
@@ -233,14 +365,8 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="5" style="text-align:center;">
-                                        No products found.
-                                    </td>
-                                </tr>
                             @endforelse
                         </tbody>
-
                     </table>
                 </div>
             </div>
@@ -263,7 +389,8 @@
                 </div>
                 <div class="modal-body">
                     <form method="POST" action="{{ route('category.store') }}"
-                        style="background:#fff; padding:15px; border:1px solid #ddd; border-radius:6px;">
+                        style="background:#fff; padding:15px; border:1px solid #ddd; border-radius:6px;"
+                        enctype="multipart/form-data">
                         @csrf
 
                         <div style="margin-bottom:12px;">
@@ -271,6 +398,12 @@
                             <input type="text" name="name" value="{{ old('name') }}" required
                                 style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;"
                                 placeholder="e.g. Blazers">
+                        </div>
+
+                        <div style="margin-bottom:12px;">
+                            <label style="display:block; margin-bottom:6px;">Category Image</label>
+                            <input type="file" name="image" accept="image/*"
+                                style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;">
                         </div>
 
                         <div style="margin-bottom:12px;">
@@ -301,16 +434,76 @@
 
 
 <script>
+    function initTable(id) {
+        const table = $(id);
+
+        // if table has only the empty placeholder row -> do not init
+        const rows = table.find("tbody tr");
+        if (rows.length === 0) return;
+        if (rows.length === 1 && rows.first().hasClass("dt-empty")) return;
+
+        if (!$.fn.DataTable.isDataTable(id)) {
+            table.DataTable({
+                responsive: true,
+                order: []
+            });
+        }
+    }
+
+    $(document).on('click', '.edit-btn-category', function() {
+
+        const id = $(this).data('id');
+        const name = $(this).data('name');
+        const active = $(this).data('active');
+        const image = $(this).data('image'); // full URL or ""
+
+        // Fill name + active
+        $('#editCategoryName').val(name);
+        $('#editCategoryActive').prop('checked', active == 1);
+
+        // Reset remove_image every time modal opens
+        $('input[name="remove_image"]').prop('checked', false);
+
+        // Preview image
+        if (image) {
+            $('#editCategoryPreview').attr('src', image).show();
+            $('#editCategoryNoImage').hide();
+        } else {
+            $('#editCategoryPreview').attr('src', '').hide();
+            $('#editCategoryNoImage').show();
+        }
+
+        // Update form action safely
+        const form = $('#editCategoryForm');
+        let action = form.attr('action');
+
+        // if action ends with /0 replace it
+        action = action.replace(/\/0$/, '/' + id);
+
+        // if action already has some id, replace last number
+        action = action.replace(/\/\d+$/, '/' + id);
+
+        form.attr('action', action);
+    });
+
     $(document).ready(function() {
-        // Initialize tables once
-        const categoryTable = $('#category-table').DataTable({
-            responsive: true,
-            order: []
-        });
-        const productTable = $('#product-table').DataTable({
-            responsive: true,
-            order: []
-        });
+
+        initTable('#product-table');
+        initTable('#category-table');
+        initTable('#order-table');
+
+        // ✅ Only fetch DT instance if it exists
+        const categoryTable = $.fn.DataTable.isDataTable('#category-table') ?
+            $('#category-table').DataTable() :
+            null;
+
+        const productTable = $.fn.DataTable.isDataTable('#product-table') ?
+            $('#product-table').DataTable() :
+            null;
+
+        // ====================
+        // Delete via SweetAlert
+        // ====================
 
         // Category Delete
         $(document).on('click', '.category-delete-btn', function() {
@@ -333,8 +526,11 @@
                         type: 'POST',
                         data: form.serialize(),
                         success: function() {
-                            // Remove row via DataTables API
-                            categoryTable.row(row).remove().draw(false);
+                            if (categoryTable) {
+                                categoryTable.row(row).remove().draw(false);
+                            } else {
+                                row.remove();
+                            }
                             Swal.fire('Deleted!', 'Category has been deleted.',
                                 'success');
                         },
@@ -367,8 +563,11 @@
                         type: 'POST',
                         data: form.serialize(),
                         success: function() {
-                            // Remove row via DataTables API
-                            productTable.row(row).remove().draw(false);
+                            if (productTable) {
+                                productTable.row(row).remove().draw(false);
+                            } else {
+                                row.remove();
+                            }
                             Swal.fire('Deleted!', 'Product has been deleted.',
                                 'success');
                         },
@@ -380,20 +579,15 @@
             });
         });
 
-        // Edit Category Modal
-        const editButtons = document.querySelectorAll('.edit-btn-category');
-        editButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const id = this.dataset.id;
-                const name = this.dataset.name;
-                const active = this.dataset.active;
-
-                document.getElementById('editCategoryName').value = name;
-                document.getElementById('editCategoryActive').checked = active == 1;
-
-                const form = document.getElementById('editCategoryForm');
-                form.action = form.action.replace('/0', '/' + id);
-            });
+        // Tabs fix (optional but good)
+        $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function() {
+            $.fn.dataTable.tables({
+                    visible: true,
+                    api: true
+                })
+                .columns.adjust()
+                .responsive.recalc();
         });
+
     });
 </script>
