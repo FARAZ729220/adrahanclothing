@@ -10,10 +10,12 @@ use App\Http\Controllers\StorefrontController;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
+
 
 /*
 |--------------------------------------------------------------------------
-| FRONTEND ROUTES (TEMPORARILY DISABLED)
+| FRONTEND ROUTES 
 |--------------------------------------------------------------------------
 */
 
@@ -33,6 +35,14 @@ Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])-
 Route::get('/order-success/{order_number}', [CheckoutController::class, 'success'])
     ->name('checkout.success');
 
+Route::get('/test-mail', function () {
+    Mail::raw('Test email from Adrahan Clothing', function ($message) {
+        $message->to(env('ADMIN_ORDER_EMAIL'))
+            ->subject('Test Mail');
+    });
+
+    return 'Mail sent (check inbox/spam).';
+});
 /*
 |--------------------------------------------------------------------------
 | ADMIN AUTH ROUTES
@@ -59,6 +69,7 @@ Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
+    Route::get('/categories', [AdminCategoryController::class, 'category'])->name('category.index');
     Route::post('/categories', [AdminCategoryController::class, 'category_store'])->name('category.store');
     Route::put('/categories/{id}', [AdminCategoryController::class, 'category_update'])->name('category.update');
     Route::delete('/categories/{id}', [AdminCategoryController::class, 'category_destroy'])->name('category.destroy');
@@ -94,6 +105,9 @@ Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
 
     Route::post('/orders/{id}/cancel', [AdminOrderController::class, 'cancel'])
         ->name('admin.orders.cancel');
+
+    Route::post('/logout', [AdminAuthController::class, 'logout'])
+        ->name('admin.logout');
 
 });
 

@@ -2,7 +2,7 @@
      <div class="container">
          <div class="row gy-4">
              <div class="col-md-4">
-                 <a class="navbar-brand fw-black text-white d-block mb-3" href="#">DRIP<span>.</span></a>
+                 <a class="navbar-brand fw-black text-white d-block mb-3" href="#">Adrahan<span>.</span></a>
                  <p class="text-light opacity-50 small footer-desc">
                      Bold fashion for the fearless generation.<br>
                      Express yourself, unapologetically.
@@ -12,9 +12,9 @@
              <div class="col-md-4 text-md-center">
                  <h6 class="fw-bold text-white mb-3 small text-uppercase">Quick Links</h6>
                  <ul class="list-unstyled">
-                     <li><a href="#" class="footer-link">Home</a></li>
-                     <li><a href="#" class="footer-link">Shop</a></li>
-                     <li><a href="#" class="footer-link">Cart</a></li>
+                     <li><a href="{{ route('home') }}" class="footer-link">Home</a></li>
+                     <li><a href="{{ route('shop') }}" class="footer-link">Shop</a></li>
+                     <li><a href="{{ route('cart.index') }}" class="footer-link">Cart</a></li>
                  </ul>
              </div>
 
@@ -41,7 +41,7 @@
              </div>
          </div>
          <div class="footer-bottom mt-5 pt-4 text-center">
-             <p class="tiny-text opacity-50 m-0">© 2026 DRIP. All rights reserved.</p>
+             <p class="tiny-text opacity-50 m-0">© {{ date('Y') }} Adrahan. All rights reserved.</p>
          </div>
      </div>
  </footer>

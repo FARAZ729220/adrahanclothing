@@ -4,11 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class AdminCategoryController extends Controller
 {
+    public function category()
+    {
+
+        $categories = Category::latest()->get();
+
+        return view('admin.categories.index', compact('categories'));
+    }
+
     public function category_store(Request $request)
     {
         $validated = $request->validate([

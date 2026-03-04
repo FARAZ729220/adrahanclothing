@@ -14,10 +14,7 @@ class CartController extends Controller
 
         $subtotal = $cartItems->sum(fn ($item) => ((float) $item['price']) * ((int) $item['qty']));
 
-        $shipping = (int) session('shipping_fee', 200); // default 200 for now
-        if ($cartItems->count() === 0) {
-            $shipping = 0;
-        }
+        $shipping = $this->getShippingFee($cart);
 
         $total = $subtotal + $shipping;
 
@@ -243,5 +240,14 @@ class CartController extends Controller
             'total' => (int) round($total),
             'is_empty' => count($cart) === 0,
         ], $extra));
+    }
+
+    private function getShippingFee(array $cart): int
+    {
+        if (count($cart) === 0) {
+            return 0;
+        }
+
+        return (int) session('shipping_fee', 200);
     }
 }

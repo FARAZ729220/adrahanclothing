@@ -419,13 +419,13 @@ h1 {
 
 /* Price and Stock Typography */
 .old-price {
-    font-size: 13px;
+    font-size: 10px;
     opacity: 0.6;
 }
 
 .product-price {
-    color: #ff00ff; /* Neon Pink */
-    font-size: 15px;
+    color: #f3cbf3; /* Neon Pink */
+    font-size: 12px;
 }
 
 .stock-text {

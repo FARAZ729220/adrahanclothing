@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand navbar-dark fixed-top custom-nav fade-in-content">
     <div class="container-fluid px-4 px-md-5">
-        <a class="navbar-brand fw-black" href="#">Adrahan<span>.</span></a>
+        <a class="navbar-brand fw-black" href="{{ route('home') }}">Adrahan<span>.</span></a>
 
         <div class="navbar-nav mx-auto">
             <a class="nav-link px-3" href="{{ route('home') }}">Home</a>
