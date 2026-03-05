@@ -1,4 +1,4 @@
-<x-layout>
+<x-layout title="thankyou | Adrahan">
 
     <section class="success-section py-5 vh-100 d-flex align-items-center justify-content-center">
         <div class="container text-center">

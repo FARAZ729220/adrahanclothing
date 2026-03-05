@@ -17,10 +17,6 @@ class AdminAuthController extends Controller
 
     public function admin_dashboard()
     {
-        // Lists for tables
-        $orders = Order::latest()->take(20)->get();
-        $categories = Category::latest()->get();
-        $products = Product::latest()->get();
 
         // Basic totals
         $totalOrders = Order::count();
@@ -49,9 +45,6 @@ class AdminAuthController extends Controller
         $outOfStockProducts = Product::where('stock', 0)->count();
 
         return view('admin.dashboard', compact(
-            'orders',
-            'categories',
-            'products',
             'totalOrders',
             'totalCategories',
             'totalProducts',

@@ -183,17 +183,17 @@ class CheckoutController extends Controller
             session()->put('last_order_number', $order->order_number);
 
             $order->load('items');
-            
+
             try {
                 // customer email (optional)
                 if (! empty($order->customer_email)) {
-                    Mail::to($order->customer_email)->send(new OrderPlacedCustomerMail($order));
+                    Mail::to($order->customer_email)->queue(new OrderPlacedCustomerMail($order));
                 }
 
                 // admin email (required)
                 $adminEmail = env('ADMIN_ORDER_EMAIL', config('mail.from.address'));
                 if (! empty($adminEmail)) {
-                    Mail::to($adminEmail)->send(new OrderPlacedAdminMail($order));
+                    Mail::to($adminEmail)->queue(new OrderPlacedAdminMail($order));
                 }
             } catch (\Throwable $mailEx) {
                 // ✅ fail silently so order flow doesn't break

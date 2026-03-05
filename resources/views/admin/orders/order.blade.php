@@ -1,75 +1,65 @@
 <x-admin.layout>
-
-    <h2>Orders</h2>
-
-    <form method="GET" action="{{ route('admin.orders.index') }}"
-        style="background:#fff;padding:12px;border:1px solid #ddd;margin-bottom:12px;">
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <select name="payment_method">
-                <option value="">Payment Method (All)</option>
-                <option value="cod" {{ request('payment_method') === 'cod' ? 'selected' : '' }}>COD</option>
-                <option value="online_manual" {{ request('payment_method') === 'online_manual' ? 'selected' : '' }}>Online
-                    Manual</option>
-            </select>
-
-            <select name="payment_status">
-                <option value="">Payment Status (All)</option>
-                <option value="unpaid" {{ request('payment_status') === 'unpaid' ? 'selected' : '' }}>Unpaid</option>
-                <option value="pending_verification"
-                    {{ request('payment_status') === 'pending_verification' ? 'selected' : '' }}>Pending Verification
-                </option>
-                <option value="paid" {{ request('payment_status') === 'paid' ? 'selected' : '' }}>Paid</option>
-            </select>
-
-            <select name="delivery_status">
-                <option value="">Delivery Status (All)</option>
-                <option value="pending" {{ request('delivery_status') === 'pending' ? 'selected' : '' }}>Pending</option>
-                <option value="done" {{ request('delivery_status') === 'done' ? 'selected' : '' }}>Done</option>
-            </select>
-
-            <button type="submit">Filter</button>
-            <a href="{{ route('admin.orders.index') }}">Reset</a>
+    <main class="flex-grow-1 p-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-white fw-black m-0">Orders</h2>
         </div>
-    </form>
 
-    <div style="background:#fff;padding:12px;border:1px solid #ddd;">
-        <table class="table" style="width:100%; border-collapse:collapse;">
-            <thead>
-                <tr style="text-align:left;">
-                    <th>Order#</th>
-                    <th>Customer</th>
-                    <th>Method</th>
-                    <th>Payment</th>
-                    <th>Delivery</th>
-                    <th>Total</th>
-                    <th>Date</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($orders as $order)
-                    <tr style="border-top:1px solid #eee;">
-                        <td>{{ $order->order_number }}</td>
-                        <td>{{ $order->customer_name }}<br><small>{{ $order->customer_phone }}</small></td>
-                        <td>{{ strtoupper($order->payment_method) }}</td>
-                        <td>{{ $order->payment_status }}</td>
-                        <td>{{ $order->delivery_status }}</td>
-                        <td>{{ $order->grand_total }}</td>
-                        <td>{{ $order->created_at->format('d M Y') }}</td>
-                        <td>
-                            <a href="{{ route('admin.orders.show', $order->id) }}">View</a>
-                        </td>
-                    </tr>
-                @empty
+        <div class="table-responsive">
+            <table class="table table-dark custom-admin-table align-middle" id="order-table">
+                <thead>
                     <tr>
-                        <td colspan="8" style="text-align:center;padding:20px;">No orders found.</td>
+                        <th class="text-secondary small fw-bold border-0">Order ID</th>
+                        <th class="text-secondary small fw-bold border-0">Customer</th>
+                        <th class="text-secondary small fw-bold border-0">Date</th>
+                        <th class="text-secondary small fw-bold border-0">Total</th>
+                        <th class="text-secondary small fw-bold border-0">Status</th>
+                        <th class="text-secondary small fw-bold border-0">View Order Detail</th>
                     </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @forelse($orders as $order)
+                        <tr>
+                            <td>{{ $order->order_number }}</td>
+                            <td>{{ $order->customer_name }} <br>
+                                <small>{{ $order->customer_phone }}</small>
+                            </td>
+                            <td class="text-secondary">{{ $order->created_at->format('d M Y') }}</td>
+                            <td class="fw-bold">Rs {{ $order->grand_total }}</td>
+                            <td>
+                                @if ($order->order_status === 'cancelled')
+                                    <span class="badge status-cancelled">Cancelled</span>
+                                @elseif($order->delivery_status === 'done')
+                                    <span class="badge status-delivered">Delivered</span>
+                                @elseif($order->payment_status === 'pending_verification')
+                                    <span class="badge status-pending">Pending Verification</span>
+                                @else
+                                    <span class="badge status-pending">Pending</span>
+                                @endif
+                            </td>
 
-        <div style="margin-top:12px;">
-            {{ $orders->links() }}
+                            <td><a href="{{ route('admin.orders.show', $order->id) }}"><i class="bi bi-eye-fill"></i></a></td>
+                        </tr>
+                    @empty
+                        <p>No Order at the moment</p>
+                    @endforelse
+
+                </tbody>
+            </table>
         </div>
-    </div>
+    </main>
+
 </x-admin.layout>
+
+<script>
+   $(document).ready(function() {
+        $('#order-table').DataTable({
+            pageLength: 10,
+            ordering: true,
+            responsive: true,
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: "Search orders..."
+            }
+        });
+    });
+</script>

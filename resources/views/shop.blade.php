@@ -1,4 +1,4 @@
-<x-layout>
+<x-layout title="Shop | Adrahan">
     <section id="all-products" class="all-products-section py-5">
         <div class="container py-5">
 

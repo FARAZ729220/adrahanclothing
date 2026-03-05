@@ -1,4 +1,4 @@
-<x-layout>
+<x-layout title="Cart | Adrahan">
 
     @php
         $isEmpty = $cartItems->count() === 0;

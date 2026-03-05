@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
-| FRONTEND ROUTES 
+| FRONTEND ROUTES
 |--------------------------------------------------------------------------
 */
 
@@ -82,6 +82,7 @@ Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
 
     // Product Management
 
+    Route::get('/products', [AdminProductController::class, 'product_index'])->name('product.index');
     Route::get('/products/create', [AdminProductController::class, 'product_create'])->name('product.create');
     Route::post('/products', [AdminProductController::class, 'product_store'])->name('product.store');
     Route::get('/products/{id}/edit', [AdminProductController::class, 'edit'])->name('product.edit');
@@ -94,6 +95,8 @@ Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
     | ORDER MANAGEMENT
     |--------------------------------------------------------------------------
     */
+
+    Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
 
     Route::get('/orders/{id}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
 

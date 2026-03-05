@@ -1,4 +1,4 @@
-<x-layout>
+<x-layout title="Home | Adrahan">
 
     <section class="hero-section d-flex align-items-center justify-content-center text-center">
         <div class="hero-overlay"></div>
@@ -165,5 +165,5 @@
             </div>
         </div>
     </section>
-    
+
 </x-layout>

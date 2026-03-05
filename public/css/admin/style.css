@@ -67,3 +67,210 @@
     color: #20c997;
     background: rgba(32, 201, 151, 0.1);
 }
+
+/* Table Specific Styling */
+.custom-admin-table {
+    --bs-table-bg: transparent;
+    color: white;
+}
+
+.custom-admin-table th,
+.custom-admin-table td {
+    padding: 20px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Status Badges */
+.badge {
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-paid,
+.status-delivered {
+    background-color: #ff00ff; /* Neon Pink */
+    color: white;
+}
+
+.status-pending {
+    background-color: #0d6efd; /* Blue */
+    color: white;
+}
+
+.status-shipped {
+    background-color: transparent;
+    border: 1px solid white; /* White Outline */
+    color: white;
+}
+
+.status-cancelled {
+    background-color: #dc3545; /* Red */
+    color: white;
+}
+
+/* Card Container */
+.admin-card {
+    background: #111;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 0 0 1px #222;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Section Spacing */
+.admin-form .row > div {
+    margin-bottom: 18px;
+}
+
+/* Labels */
+.admin-form .form-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: #888;
+    margin-bottom: 6px;
+}
+
+/* Inputs */
+.admin-form .form-control,
+.admin-form .form-select {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.admin-form .form-control:focus,
+.admin-form .form-select:focus {
+    border-color: #6f42c1;
+    box-shadow: 0 0 0 2px rgba(111, 66, 193, 0.2);
+    background: #1a1a1a;
+    color: #fff;
+}
+
+/* Textarea */
+.admin-form textarea {
+    resize: none;
+}
+
+/* Image Boxes */
+.admin-form img {
+    border-radius: 8px;
+}
+
+/* Save Button */
+.btn-save {
+    background: #6f42c1;
+    color: white;
+    padding: 10px 22px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.btn-save:hover {
+    background: #5936a5;
+}
+
+/* Cancel Button */
+.btn-cancel {
+    background: #2a2a2a;
+    color: #aaa;
+    padding: 10px 22px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.btn-cancel:hover {
+    background: #333;
+    color: #fff;
+}
+
+.btn-back {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    color: #aaa;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.2s ease;
+}
+
+.btn-back:hover {
+    background: #2a2a2a;
+    color: #fff;
+}
+
+.glass-card {
+    background: rgba(15, 15, 24, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(12px);
+}
+
+.info-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.info-line:last-child {
+    border-bottom: none;
+}
+.info-line .k {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 12px;
+}
+.info-line .v {
+    color: #fff;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.address-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 12px;
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.5;
+    font-size: 13px;
+    white-space: pre-line;
+}
+
+.summary-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 14px;
+    border-radius: 14px;
+}
+
+.dark-select {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+}
+.dark-select option {
+    background: #0b0b12;
+}
+
+.item-row {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.proof-img {
+    width: 100%;
+    max-height: 260px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}

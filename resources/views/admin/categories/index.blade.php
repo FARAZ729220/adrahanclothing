@@ -1,70 +1,68 @@
 <x-admin.layout>
 
-    <div class="admin-content-wrap">
-        <div class="admin-panel">
-            <div class="admin-panel-header">
-                <h4 class="admin-title mb-0">Categories</h4>
+    <main class="flex-grow-1 p-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-white fw-black m-0">Categories</h2>
 
-                <button type="button" class="btn btn-theme" data-bs-toggle="modal" data-bs-target="#category">
-                    <i class="bi bi-plus-circle me-2"></i> Add Category
-                </button>
-            </div>
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#category">
+                <i class="bi bi-plus-circle me-2"></i> Add Category
+            </button>
+        </div>
 
-            <div class="table-responsive">
-                <table class="table theme-table align-middle" id="category-table">
-                    <thead>
+        <div class="table-responsive">
+            <table class="table table-dark custom-admin-table align-middle" id="category-table">
+                <thead>
+                    <tr>
+                        <th class="text-secondary small fw-bold border-0">Name</th>
+                        <th class="text-secondary small fw-bold border-0">Image</th>
+                        <th class="text-secondary small fw-bold border-0">Status</th>
+                        <th class="text-secondary small fw-bold border-0">Date</th>
+                        <th class="text-secondary small fw-bold border-0">Actions</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($categories as $category)
                         <tr>
-                            <th>Name</th>
-                            <th>Image</th>
-                            <th>Active</th>
-                            <th>Created</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($categories as $category)
-                            <tr>
-                                <td>{{ $category->name }}</td>
-                                <td>
-                                    @if ($category->image)
-                                        <img src="{{ asset('storage/' . $category->image) }}" width="50"
-                                            style="border-radius:6px;">
-                                    @else
-                                        No Image
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($category->is_active)
-                                        <span class="text-success">Active</span>
-                                    @else
-                                        <span class="text-danger">Not Active</span>
-                                    @endif
-                                </td>
-                                <td>{{ $category->created_at->format('d M Y') }}</td>
-                                <td class="table-actions">
-                                    <button type="button" class="btn btn-secondary edit-btn-category"
-                                        data-bs-toggle="modal" data-bs-target="#editcategory"
-                                        data-id="{{ $category->id }}" data-name="{{ $category->name }}"
-                                        data-active="{{ $category->is_active ? 1 : 0 }}"
-                                        data-image="{{ $category->image ? asset('storage/' . $category->image) : '' }}">
-                                        ✏️
+                            <td>{{ $category->name }}</td>
+                            <td>
+                                @if ($category->image)
+                                    <img src="{{ asset('storage/' . $category->image) }}" width="50"
+                                        style="border-radius:6px;">
+                                @else
+                                    No Image
+                                @endif
+                            </td>
+                            <td class="text-secondary">
+                                @if ($category->is_active)
+                                    <span class="text-success">Active</span>
+                                @else
+                                    <span class="text-danger">Not Active</span>
+                                @endif
+                            </td>
+                            <td class="fw-bold">{{ $category->created_at->format('d M Y') }}</td>
+                            <td class="fw-bold"><button type="button" class="btn btn-secondary edit-btn-category"
+                                    data-bs-toggle="modal" data-bs-target="#editcategory" data-id="{{ $category->id }}"
+                                    data-name="{{ $category->name }}" data-active="{{ $category->is_active ? 1 : 0 }}"
+                                    data-image="{{ $category->image ? asset('storage/' . $category->image) : '' }}">
+                                    ✏️
+                                </button>
+
+                                <form method="POST" action="{{ route('category.destroy', $category->id) }}"
+                                    style="display:inline-block;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-danger category-delete-btn"
+                                        data-id="{{ $category->id }}">
+                                        🗑️
                                     </button>
+                                </form>
+                            </td>
 
-                                    <form method="POST" action="{{ route('category.destroy', $category->id) }}"
-                                        style="display:inline-block;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button" class="btn btn-danger category-delete-btn"
-                                            data-id="{{ $category->id }}">
-                                            🗑️
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
-                        @endforelse
-                    </tbody>
-
+                        </tr>
+                    @empty
+                        <p>No Order at the moment</p>
+                    @endforelse
                     <div class="modal fade" id="editcategory" tabindex="-1" aria-labelledby="editCategoryLabel"
                         aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
@@ -133,16 +131,10 @@
                             </div>
                         </div>
                     </div>
-                </table>
-            </div>
+                </tbody>
+            </table>
         </div>
-    </div>
-
-
-
-
-
-
+    </main>
 
     {{-- Category Modal --}}
     <div class="modal fade" id="category" tabindex="-1" aria-labelledby="categoryLabel" aria-hidden="true">
@@ -196,22 +188,6 @@
 </x-admin.layout>
 
 <script>
-    function initTable(id) {
-        const table = $(id);
-
-        // if table has only the empty placeholder row -> do not init
-        const rows = table.find("tbody tr");
-        if (rows.length === 0) return;
-        if (rows.length === 1 && rows.first().hasClass("dt-empty")) return;
-
-        if (!$.fn.DataTable.isDataTable(id)) {
-            table.DataTable({
-                responsive: true,
-                order: []
-            });
-        }
-    }
-
     $(document).on('click', '.edit-btn-category', function() {
 
         const id = $(this).data('id');
@@ -248,27 +224,16 @@
         form.attr('action', action);
     });
 
+    let categoryTable;
+
     $(document).ready(function() {
 
-        initTable('#product-table');
-        initTable('#category-table');
-        initTable('#order-table');
+        // Initialize DataTable
+        categoryTable = $('#category-table').DataTable();
 
-        // ✅ Only fetch DT instance if it exists
-        const categoryTable = $.fn.DataTable.isDataTable('#category-table') ?
-            $('#category-table').DataTable() :
-            null;
-
-        const productTable = $.fn.DataTable.isDataTable('#product-table') ?
-            $('#product-table').DataTable() :
-            null;
-
-        // ====================
-        // Delete via SweetAlert
-        // ====================
-
-        // Category Delete
+        // Delete Category
         $(document).on('click', '.category-delete-btn', function() {
+
             const button = $(this);
             const form = button.closest('form');
             const row = button.closest('tr');
@@ -282,73 +247,34 @@
                 cancelButtonColor: '#3085d6',
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
+
                 if (result.isConfirmed) {
+
                     $.ajax({
                         url: form.attr('action'),
                         type: 'POST',
                         data: form.serialize(),
                         success: function() {
-                            if (categoryTable) {
-                                categoryTable.row(row).remove().draw(false);
-                            } else {
-                                row.remove();
-                            }
-                            Swal.fire('Deleted!', 'Category has been deleted.',
-                                'success');
+
+                            categoryTable.row(row).remove().draw();
+
+                            Swal.fire(
+                                'Deleted!',
+                                'Category has been deleted.',
+                                'success'
+                            );
                         },
                         error: function() {
-                            Swal.fire('Error!', 'Something went wrong.', 'error');
+                            Swal.fire(
+                                'Error!',
+                                'Something went wrong.',
+                                'error'
+                            );
                         }
                     });
+
                 }
             });
-        });
-
-        // Product Delete
-        $(document).on('click', '.product-delete-btn', function() {
-            const button = $(this);
-            const form = button.closest('form');
-            const row = button.closest('tr');
-
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "This product will be permanently deleted!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: form.attr('action'),
-                        type: 'POST',
-                        data: form.serialize(),
-                        success: function() {
-                            if (productTable) {
-                                productTable.row(row).remove().draw(false);
-                            } else {
-                                row.remove();
-                            }
-                            Swal.fire('Deleted!', 'Product has been deleted.',
-                                'success');
-                        },
-                        error: function() {
-                            Swal.fire('Error!', 'Something went wrong.', 'error');
-                        }
-                    });
-                }
-            });
-        });
-
-        // Tabs fix (optional but good)
-        $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function() {
-            $.fn.dataTable.tables({
-                    visible: true,
-                    api: true
-                })
-                .columns.adjust()
-                .responsive.recalc();
         });
 
     });

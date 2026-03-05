@@ -11,6 +11,13 @@ use Illuminate\Validation\Rule;
 
 class AdminProductController extends Controller
 {
+    public function product_index()
+    {
+        $products = Product::latest()->get();
+
+        return view('admin.products.index', compact('products'));
+    }
+
     public function product_create()
     {
         $categories = Category::where('is_active', true)->get();

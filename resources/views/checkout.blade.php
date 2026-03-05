@@ -1,4 +1,4 @@
-<x-layout>
+<x-layout title="Checkout | Adrahan">
     <section style="padding:140px 0;">
         <div class="container">
 
