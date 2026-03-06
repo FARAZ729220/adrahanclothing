@@ -129,8 +129,8 @@ class AdminProductController extends Controller
         $validated = $request->validate([
             'name' => [
                 'required', 'string', 'max:255',
-                Rule::unique('products')->where(fn ($q) => $q->where('category_id', $request->category_id)
-                )->ignore($product->id),
+                Rule::unique('products')->where(fn ($q) => $q->where('category_id', $request->category_id))
+                    ->ignore($product->id),
             ],
             'price' => ['required', 'numeric', 'min:0'],
             'category_id' => ['required', 'integer', 'exists:categories,id'],
@@ -144,6 +144,9 @@ class AdminProductController extends Controller
             'remove_images' => ['nullable', 'array'],
             'remove_images.*' => ['string'],
         ]);
+
+        // ✅ Auto active/inactive based on stock
+        $isActive = ((int) $validated['stock'] > 0);
 
         // Parse sizes
         $sizesArray = [];
@@ -175,6 +178,7 @@ class AdminProductController extends Controller
             $slugBase = Str::slug($validated['name']);
             $slug = $slugBase;
             $i = 1;
+
             while (Product::where('slug', $slug)->where('id', '!=', $product->id)->exists()) {
                 $slug = $slugBase.'-'.$i;
                 $i++;
@@ -189,7 +193,6 @@ class AdminProductController extends Controller
         $removeImages = $validated['remove_images'] ?? [];
         if (! empty($removeImages)) {
             foreach ($removeImages as $img) {
-                // delete file only if it exists in current list
                 if (in_array($img, $currentImages, true)) {
                     Storage::disk('public')->delete($img);
                 }
@@ -204,12 +207,13 @@ class AdminProductController extends Controller
             }
         }
 
-        // Update product
+        // ✅ Update product
         $product->update([
             'category_id' => $validated['category_id'],
             'name' => $validated['name'],
             'price' => $validated['price'],
             'stock' => $validated['stock'],
+            'is_active' => $isActive, // ✅ important
             'sizes' => $sizesArray,
             'discount_type' => $validated['discount_type'],
             'discount_value' => $discountValue,

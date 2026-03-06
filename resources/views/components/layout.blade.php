@@ -34,6 +34,29 @@
      {{ $scripts ?? '' }}
 
      <script>
+         function handleNavbar() {
+             const nav = document.querySelector('.custom-nav');
+             if (!nav) return;
+
+             const hero = document.querySelector('#homeHero'); // only exists on home
+
+             // If NOT on home/hero page, navbar must be visible from start
+             if (!hero) {
+                 nav.classList.add('nav-scrolled');
+                 return;
+             }
+
+             // Normal behavior on hero pages
+             if (window.scrollY > 50) {
+                 nav.classList.add('nav-scrolled');
+             } else {
+                 nav.classList.remove('nav-scrolled');
+             }
+         }
+
+         window.addEventListener('scroll', handleNavbar);
+         window.addEventListener('load', handleNavbar);
+
          window.setCartBadge = function(count) {
              const badge = document.getElementById('cartCountBadge');
              if (!badge) return;
@@ -46,7 +69,32 @@
              } else {
                  badge.style.display = 'none';
              }
-         }
+         }; // ✅ IMPORTANT: semicolon here
+
+         // ✅ Scroll Reveal (IntersectionObserver)
+         (function() {
+             const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
+
+             document.querySelectorAll('.reveal-stagger').forEach(container => {
+                 Array.from(container.children).forEach((child, idx) => {
+                     child.style.setProperty('--i', idx);
+                 });
+             });
+
+             const io = new IntersectionObserver((entries) => {
+                 entries.forEach(entry => {
+                     if (entry.isIntersecting) {
+                         entry.target.classList.add('is-visible');
+                         io.unobserve(entry.target);
+                     }
+                 });
+             }, {
+                 threshold: 0.08, // triggers earlier
+                 rootMargin: '0px 0px -5% 0px' // less aggressive cutoff
+             });
+
+             revealEls.forEach(el => io.observe(el));
+         })();
      </script>
  </body>
 

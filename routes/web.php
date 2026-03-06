@@ -6,12 +6,12 @@ use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\AdminProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\AdminSettingsController;
 use App\Http\Controllers\StorefrontController;
 use App\Models\Order;
 use App\Models\Product;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
-
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Mail;
 
 Route::get('/', [StorefrontController::class, 'home'])->name('home');
 Route::get('/shop', [StorefrontController::class, 'shop'])->name('shop');
+Route::get('/contact-us', [StorefrontController::class, 'contact_us'])->name('contact.us');
+Route::get('/our-mission-vision', [StorefrontController::class, 'our_mission'])->name('mission');
 
 Route::get('/product/{slug}', [StorefrontController::class, 'productShow'])->name('product.show');
 
@@ -109,13 +111,12 @@ Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
     Route::post('/orders/{id}/cancel', [AdminOrderController::class, 'cancel'])
         ->name('admin.orders.cancel');
 
+    Route::get('settings', [AdminSettingsController::class, 'setting'])->name('admin.settings');
+
+    Route::post('settings/update', [AdminSettingsController::class, 'setting_update'])->name('admin.settings.update');
+
     Route::post('/logout', [AdminAuthController::class, 'logout'])
         ->name('admin.logout');
 
 });
-
-/*
-|--------------------------------------------------------------------------
-| DEFAULT ROUTE
-|--------------------------------------------------------------------------
-*/
+ 

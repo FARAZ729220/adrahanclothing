@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Setting;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -10,6 +11,7 @@ class StorefrontController extends Controller
 {
     public function home()
     {
+        $settings = Setting::first();
         $products = \App\Models\Product::where('is_active', true)
             ->latest()
             ->take(8) // home pe kitne show karne hain
@@ -19,7 +21,7 @@ class StorefrontController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('home', compact('products', 'categories'));
+        return view('pages.home', compact('products', 'categories','settings'));
     }
 
     public function shop(Request $request)
@@ -41,13 +43,23 @@ class StorefrontController extends Controller
 
         $products = $productsQuery->latest()->paginate(12)->withQueryString();
 
-        return view('shop', compact('categories', 'products', 'selectedCategory', 'selectedSlug'));
+        return view('pages.shop', compact('categories', 'products', 'selectedCategory', 'selectedSlug'));
     }
 
     public function productShow($slug)
     {
         $product = Product::where('slug', $slug)->where('is_active', true)->firstOrFail();
 
-        return view('product_detail', compact('product'));
+        return view('pages.product_detail', compact('product'));
+    }
+
+    public function contact_us()
+    {
+        return view('pages.contact');
+    }
+
+    public function our_mission()
+    {
+        return view('pages.our_mission');
     }
 }

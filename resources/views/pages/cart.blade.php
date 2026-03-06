@@ -6,34 +6,43 @@
 
     {{-- EMPTY CART --}}
     @if ($isEmpty)
-        <section class="empty-cart-section py-5 vh-100 d-flex align-items-center justify-content-center">
-            <div class="container text-center">
-                <div class="cart-icon-wrapper mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
-                        class="bi bi-bag" viewBox="0 0 16 16">
+        <section class="cart-empty-section d-flex align-items-center justify-content-center bg-white">
+            <div class="container text-center py-5">
+                <div class="mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#6c757d" class="bi bi-bag-x"
+                        viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M6.146 8.146a.5.5 0 0 1 .708 0L8 9.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 10l1.147 1.146a.5.5 0 0 1-.708.708L8 10.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 10 6.146 8.854a.5.5 0 0 1 0-.708z" />
                         <path
                             d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z" />
                     </svg>
                 </div>
 
-                <h2 class="text-white fw-black mb-2">Your cart is empty</h2>
-                <p class="text-light opacity-50 mb-4">Time to fill it with some fire fits.</p>
+                <h2 class="display-5 fw-bold cart-title mb-3">Your cart is empty</h2>
+                <p class="text-muted lead mb-5 mx-auto" style="max-width: 500px;">
+                    Discover our collection and find something you love.
+                </p>
 
-                <a href="{{ route('shop') }}" class="btn btn-gradient px-5 py-3 rounded-pill fw-bold text-uppercase">
-                    CONTINUE SHOPPING
+                <a href="{{ route('shop') }}" class="btn btn-dark rounded-0 px-5 py-3 fw-bold text-uppercase ls-1">
+                    Start Shopping
                 </a>
             </div>
         </section>
     @else
         {{-- CART WITH ITEMS --}}
-        <section class="cart-section py-5">
+
+
+        <section class="cart-section py-5 bg-white">
             <div class="container py-5">
-                <h2 class="display-5 fw-black text-white mb-5">Your <span class="gradient-text">Cart</span></h2>
+
+                <h1 class="display-4 fw-bold section-title mb-5">Shopping Cart</h1>
 
                 <div class="row g-5">
+
+                    {{-- LEFT: Cart Items --}}
                     <div class="col-lg-8">
 
-                        @foreach ($cartItems as $item)
+                        @forelse ($cartItems as $item)
                             @php
                                 $img = !empty($item['img'])
                                     ? asset('storage/' . $item['img'])
@@ -42,89 +51,107 @@
                                 $qty = (int) ($item['qty'] ?? 1);
                                 $unitPrice = (float) ($item['price'] ?? 0);
                                 $lineTotal = $unitPrice * $qty;
+
+                                $size = $item['size'] ?? null;
+                                $stock = (int) ($item['stock'] ?? 0);
+                                $key = $item['key'];
                             @endphp
 
-                            <div class="cart-item-card d-flex align-items-center mb-4 p-3" id="row-{{ $item['key'] }}"
-                                data-key="{{ $item['key'] }}">
+                            <div class="cart-item border p-3 d-flex align-items-center position-relative mb-3"
+                                id="row-{{ $key }}" data-key="{{ $key }}">
 
-                                <img src="{{ $img }}" class="rounded-3 me-3" width="80" height="80"
-                                    style="object-fit:cover;" alt="{{ $item['name'] }}">
+                                {{-- Image --}}
+                                <div class="cart-img-box me-4">
+                                    <img src="{{ $img }}" alt="{{ $item['name'] }}" class="img-fluid"
+                                        style="width:90px;height:90px;object-fit:cover;">
+                                </div>
 
-                                <div class="flex-grow-1">
+                                {{-- Details --}}
+                                <div class="cart-details flex-grow-1">
 
-                                    <p class="m-0 fw-bold text-white">
-                                        {{ $item['name'] }}
-                                    </p>
+                                    <h5 class="fw-bold mb-1">{{ $item['name'] }}</h5>
 
-                                    <p class="m-0 text-light opacity-75 small">
-                                        Size: <span class="fw-semibold">{{ $item['size'] }}</span>
-                                    </p>
+                                    {{-- Optional meta row --}}
+                                    <div class="d-flex flex-wrap gap-3 align-items-center mb-2">
+                                        @if ($size)
+                                            <small class="text-muted">Size: <span
+                                                    class="fw-semibold">{{ $size }}</span></small>
+                                        @endif
+                                        <small class="text-muted">Stock: <span
+                                                class="fw-semibold">{{ $stock }}</span></small>
+                                    </div>
 
-                                    {{-- Unit + line total --}}
-                                    <div class="d-flex flex-wrap align-items-center gap-3 mt-2">
-                                        <p class="m-0 text-pink fw-bold">
+                                    {{-- Price Row --}}
+                                    <div class="d-flex flex-wrap gap-3 align-items-center mb-3">
+                                        <span class="new-price fw-bold">
                                             Rs {{ number_format($unitPrice) }}
-                                        </p>
+                                        </span>
 
-                                        <p class="m-0 text-light opacity-75 small">
+                                        <small class="text-muted">
                                             Line Total:
-                                            <span class="fw-bold text-white" id="line-{{ $item['key'] }}">
+                                            <span class="fw-bold" id="line-{{ $key }}">
                                                 Rs {{ number_format($lineTotal) }}
                                             </span>
-                                        </p>
-
-                                        <p class="m-0 ms-auto text-light opacity-75 small">
-                                            Stock: {{ (int) ($item['stock'] ?? 0) }}
-                                        </p>
+                                        </small>
                                     </div>
 
-                                    {{-- Qty --}}
-                                    <div class="qty-selector d-flex align-items-center mt-3">
-                                        <button type="button" class="btn btn-sm text-white qty-minus"
-                                            data-key="{{ $item['key'] }}">-</button>
+                                    {{-- Quantity Controls --}}
+                                    <div class="d-flex align-items-center quantity-group">
+                                        <button type="button"
+                                            class="btn btn-light btn-sm border rounded-0 px-3 qty-minus"
+                                            data-key="{{ $key }}">-</button>
 
-                                        <span class="px-3 text-white"
-                                            id="qty-{{ $item['key'] }}">{{ $qty }}</span>
+                                        <span class="px-4 fw-bold"
+                                            id="qty-{{ $key }}">{{ $qty }}</span>
 
-                                        <button type="button" class="btn btn-sm text-white qty-plus"
-                                            data-key="{{ $item['key'] }}">+</button>
+                                        <button type="button"
+                                            class="btn btn-light btn-sm border rounded-0 px-3 qty-plus"
+                                            data-key="{{ $key }}">+</button>
                                     </div>
+
                                 </div>
 
                                 {{-- Remove --}}
-                                <button type="button" class="btn text-secondary remove-item"
-                                    data-key="{{ $item['key'] }}" aria-label="Remove item">
-                                    <i class="bi bi-trash"></i>
+                                <button type="button"
+                                    class="btn border-0 position-absolute top-50 end-0 translate-middle-y me-3 text-muted remove-item"
+                                    data-key="{{ $key }}" aria-label="Remove item">
+                                    <i class="bi bi-trash3"></i>
                                 </button>
+
                             </div>
-                        @endforeach
+
+                        @empty
+                            <div class="text-center py-5">
+                                <p class="mb-0 text-muted">Your cart is empty.</p>
+                            </div>
+                        @endforelse
 
                     </div>
 
-                    {{-- Order Summery --}}
+                    {{-- RIGHT: Summary --}}
                     <div class="col-lg-4">
-                        <div class="order-summary-box p-4 rounded-4">
-                            <h4 class="text-white mb-4">Order Summary</h4>
+                        <div class="summary-card border p-4">
+                            <h4 class="fw-bold mb-4">Order Summary</h4>
 
-                            <div class="d-flex justify-content-between mb-3 text-light">
-                                <span>Subtotal</span>
-                                <span id="subtotalText">Rs {{ number_format($subtotal) }}</span>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Subtotal</span>
+                                <span class="fw-bold" id="subtotalText">Rs {{ number_format($subtotal) }}</span>
                             </div>
 
-                            <div class="d-flex justify-content-between mb-4 text-light">
-                                <span>Shipping</span>
-                                <span id="shippingText">Rs {{ number_format($shipping) }}</span>
+                            <div class="d-flex justify-content-between mb-4">
+                                <span class="text-muted">Shipping</span>
+                                <span class="fw-bold" id="shippingText">Rs {{ number_format($shipping) }}</span>
                             </div>
 
-                            <hr class="border-secondary">
+                            <hr>
 
-                            <div class="d-flex justify-content-between mb-4 fw-bold">
-                                <span class="text-white">Total</span>
-                                <span class="text-white" id="totalText">Rs {{ number_format($total) }}</span>
+                            <div class="d-flex justify-content-between mb-4 mt-2">
+                                <h5 class="fw-bold mb-0">Total</h5>
+                                <h5 class="fw-bold mb-0" id="totalText">Rs {{ number_format($total) }}</h5>
                             </div>
 
                             <a href="{{ route('checkout.show') }}"
-                                class="btn btn-gradient w-100 py-3 rounded-pill fw-bold text-uppercase text-center">
+                                class="btn btn-dark w-100 rounded-0 py-3 fw-bold text-uppercase ls-1">
                                 Proceed to Checkout
                             </a>
                         </div>

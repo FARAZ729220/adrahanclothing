@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -18,7 +19,7 @@ class CartController extends Controller
 
         $total = $subtotal + $shipping;
 
-        return view('cart', compact('cartItems', 'subtotal', 'shipping', 'total'));
+        return view('pages.cart', compact('cartItems', 'subtotal', 'shipping', 'total'));
     }
 
     public function add(Request $request)
@@ -225,18 +226,16 @@ class CartController extends Controller
 
         $subtotal = collect($cart)->sum(fn ($item) => ((float) $item['price']) * ((int) $item['qty']));
 
-        $shipping = (int) session('shipping_fee', 200);
-        if (count($cart) === 0) {
-            $shipping = 0;
-        }
+        // ✅ Settings based shipping
+        $shipping = $this->getShippingFee($cart);
 
         $total = $subtotal + $shipping;
 
         return response()->json(array_merge([
             'success' => true,
-            'cart_count' => count($cart), // ✅ key matches JS
+            'cart_count' => count($cart),
             'subtotal' => (int) round($subtotal),
-            'shipping' => $shipping,
+            'shipping' => (int) $shipping,
             'total' => (int) round($total),
             'is_empty' => count($cart) === 0,
         ], $extra));
@@ -248,6 +247,12 @@ class CartController extends Controller
             return 0;
         }
 
-        return (int) session('shipping_fee', 200);
+        $settings = Setting::first();
+
+        if ($settings && $settings->free_shipping) {
+            return 0;
+        }
+
+        return $settings->shipping_fee ?? 200;
     }
 }

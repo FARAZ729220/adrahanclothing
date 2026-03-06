@@ -37,6 +37,14 @@
             </a>
         </li>
 
+        <li class="nav-item mb-2">
+            <a href="{{ route('admin.settings') }}"
+                class="nav-link d-flex align-items-center gap-2
+               {{ request()->routeIs('admin.settings*') ? 'active' : 'text-white' }}">
+                <i class="bi bi-box-seam"></i> Settings
+            </a>
+        </li>
+
     </ul>
 
     <hr class="border-secondary">

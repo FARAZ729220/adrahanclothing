@@ -7,6 +7,7 @@ use App\Mail\OrderPlacedCustomerMail;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -216,6 +217,35 @@ class CheckoutController extends Controller
         }
     }
 
+    // public function showCheckout()
+    // {
+    //     $cart = session()->get('cart', []);
+
+    //     if (empty($cart)) {
+    //         return redirect()->route('cart.index')->withErrors('Cart is empty.');
+    //     }
+
+    //     $items = collect($cart)->values();
+
+    //     $subtotal = $items->sum(fn ($i) => ((float) $i['price']) * ((int) $i['qty']));
+
+    //     $shipping = (int) session('shipping_fee', 200);
+    //     if ($items->count() === 0) {
+    //         $shipping = 0;
+    //     }
+
+    //     $total = $subtotal + $shipping;
+
+    //     // Manual payment account details (static for now)
+    //     $account = [
+    //         'title' => env('MANUAL_PAYMENT_TITLE', 'Adrahan Store'),
+    //         'number' => env('MANUAL_PAYMENT_ACCOUNT', 'Easypaisa/JazzCash: 0300-1234567'),
+    //         'note' => env('MANUAL_PAYMENT_NOTE', 'Please make the payment and upload the screenshot. The order will be confirmed after admin verification.'),
+    //     ];
+
+    //     return view('pages.checkout', compact('items', 'subtotal', 'shipping', 'total', 'account'));
+    // }
+
     public function showCheckout()
     {
         $cart = session()->get('cart', []);
@@ -228,21 +258,18 @@ class CheckoutController extends Controller
 
         $subtotal = $items->sum(fn ($i) => ((float) $i['price']) * ((int) $i['qty']));
 
-        $shipping = (int) session('shipping_fee', 200);
-        if ($items->count() === 0) {
-            $shipping = 0;
-        }
+        // ✅ Settings based shipping
+        $shipping = $this->getShippingFee($cart);
 
         $total = $subtotal + $shipping;
 
-        // Manual payment account details (static for now)
         $account = [
             'title' => env('MANUAL_PAYMENT_TITLE', 'Adrahan Store'),
             'number' => env('MANUAL_PAYMENT_ACCOUNT', 'Easypaisa/JazzCash: 0300-1234567'),
             'note' => env('MANUAL_PAYMENT_NOTE', 'Please make the payment and upload the screenshot. The order will be confirmed after admin verification.'),
         ];
 
-        return view('checkout', compact('items', 'subtotal', 'shipping', 'total', 'account'));
+        return view('pages.checkout', compact('items', 'subtotal', 'shipping', 'total', 'account'));
     }
 
     public function success($order_number)
@@ -256,7 +283,7 @@ class CheckoutController extends Controller
 
         session()->forget('last_order_number');
 
-        return view('thank_you', compact('order'));
+        return view('pages.thank_you', compact('order'));
     }
 
     private function getShippingFee(array $cart): int
@@ -265,6 +292,12 @@ class CheckoutController extends Controller
             return 0;
         }
 
-        return (int) session('shipping_fee', 200);
+        $settings = Setting::first();
+
+        if ($settings && $settings->free_shipping) {
+            return 0;
+        }
+
+        return $settings->shipping_fee ?? 200;
     }
 }
