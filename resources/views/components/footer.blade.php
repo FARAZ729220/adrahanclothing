@@ -21,11 +21,11 @@
             <div class="col-md-4">
                 <h6 class="footer-heading fw-bold mb-3">Follow Us</h6>
                 <div class="d-flex gap-3">
-                    <a href="#" class="social-circle">
+                    <a href="https://www.instagram.com/adrahanclothing.pk?igsh=MTVoYjR6MXl4eXhlMA==" target="_blank" class="social-circle">
                         <i class="bi bi-instagram"></i>
                     </a>
-                    <a href="#" class="social-circle">
-                        <i class="bi bi-twitter-x"></i>
+                    <a href="https://www.facebook.com/share/1GGsYbuefk/" class="social-circle" target="_blank">
+                        <i class="bi bi-facebook"></i>
                     </a>
                 </div>
             </div>

@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [StorefrontController::class, 'home'])->name('home');
 Route::get('/shop', [StorefrontController::class, 'shop'])->name('shop');
 Route::get('/contact-us', [StorefrontController::class, 'contact_us'])->name('contact.us');
+Route::post('/contact-us', [StorefrontController::class, 'contact_us_store'])->name('contact.us.store');
 Route::get('/our-mission-vision', [StorefrontController::class, 'our_mission'])->name('mission');
 
 Route::get('/product/{slug}', [StorefrontController::class, 'productShow'])->name('product.show');
@@ -119,4 +120,3 @@ Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
         ->name('admin.logout');
 
 });
- 
