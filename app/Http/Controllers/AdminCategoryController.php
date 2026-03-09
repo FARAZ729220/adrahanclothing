@@ -47,7 +47,7 @@ class AdminCategoryController extends Controller
             'is_active' => $request->has('is_active'),
         ]);
 
-        return redirect()->route('admin.dashboard')->with('success', 'Category Created successfully.');
+        return redirect()->back()->with('success', 'Category Created successfully.');
     }
 
     public function category_update(Request $request, $id)

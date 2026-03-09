@@ -2,7 +2,7 @@
     <div class="container py-4">
         <div class="row gy-4">
             <div class="col-md-4">
-                <h3 class="footer-logo fw-bold mb-3">Adrahan.</h3>
+                <h3 class="footer-logo fw-bold mb-3">Adrahan Clothing.</h3>
                 <p class="text-muted small mb-0">Timeless fashion for the modern wardrobe.</p>
                 <p class="text-muted small">Quality pieces, effortless style.</p>
             </div>
@@ -32,7 +32,7 @@
         </div>
 
         <div class="text-center mt-5 pt-4 border-top">
-            <p class="copyright-text mb-0">© {{ date('Y') }} Adrahan. All rights reserved.</p>
+            <p class="copyright-text mb-0">© {{ date('Y') }} Adrahan Clothing. All rights reserved.</p>
         </div>
     </div>
 </footer>

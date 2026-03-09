@@ -107,7 +107,7 @@ class AdminProductController extends Controller
             'is_active' => true,
         ]);
 
-        return redirect()->route('admin.dashboard')->with('success', 'Product created successfully.');
+        return redirect()->route('product.index')->with('success', 'Product created successfully.');
     }
 
     public function edit($id)
@@ -221,7 +221,7 @@ class AdminProductController extends Controller
             'images' => $currentImages,
         ]);
 
-        return redirect()->route('admin.dashboard')->with('success', 'Product updated successfully.');
+        return redirect()->route('product.index')->with('success', 'Product updated successfully.');
     }
 
     public function product_destroy($id)
@@ -238,7 +238,7 @@ class AdminProductController extends Controller
         // Delete product record
         $product->delete();
 
-        return redirect()->route('admin.dashboard')
+        return redirect()->route('product.index')
             ->with('success', 'Product deleted successfully.');
     }
 }

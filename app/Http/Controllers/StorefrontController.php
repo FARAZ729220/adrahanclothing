@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Contact;
 use App\Models\Product;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+
+use App\Mail\AdminNewEnquiry;
+use App\Mail\UserContactConfirmation;
 
 class StorefrontController extends Controller
 {
@@ -60,57 +65,59 @@ class StorefrontController extends Controller
 
     public function contact_us_store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => ['required', 'string', 'max:100'],
             'email' => ['required', 'email', 'max:150'],
             'phone' => ['nullable', 'string', 'max:30'],
             'description' => ['required', 'string', 'max:2000'],
+            'proof_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
 
-        $proof_image = null;
+        $proofImagePath = null;
 
         if ($request->hasFile('proof_image')) {
-            $proof_image = $request->file('proof_image')->store('contacts', 'public');
+            $proofImagePath = $request->file('proof_image')->store('contacts', 'public');
         }
 
-        $restrictedWords = ['SEO', 'marketing', 'social media marketing', 'betting'];
-        $messageContent = strtolower($request->message);
+        $restrictedWords = ['seo', 'marketing', 'social media marketing', 'betting'];
+        $messageContent = strtolower($validated['description']);
 
-        // Check if the message content contains any restricted words
         foreach ($restrictedWords as $word) {
-            if (strpos($messageContent, strtolower($word)) !== false) {
-                return back()->with('message', 'Contact Submitted successfully');
+            if (str_contains($messageContent, strtolower($word))) {
+                return back()->with('success', 'Thanks! Your message has been sent successfully.');
             }
         }
 
-        // Check if the email contains a restricted domain
-        if (str_contains(strtolower($request->email), 'xyz.com')) {
-            return back()->with('message', 'Contact Submitted successfully');
+        if (str_contains(strtolower($validated['email']), 'xyz.com')) {
+            return back()->with('success', 'Thanks! Your message has been sent successfully.');
         }
 
-        if ($this->check_email($request->email)) {
-            return redirect()->back()->with('message', 'Contact Submitted successfully');
-        }
+
 
         // Save in DB
         $contact = Contact::create([
-            'name'= $request->name,
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'],
+            'description' => $validated['description'],
+            'proof_image' => $proofImagePath,
         ]);
 
-        // Prepare email data (same keys as your blade templates expect)
+        // Mail data
         $mailData = [
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'proof' => $validated['proof_image'],
+            'phone' => $validated['phone'],
             'message' => $validated['description'],
-            'phone' => $validated['phone'] ?? null,
+            'proof_image_path' => $proofImagePath,
+            'contact_id' => $contact->id,
         ];
 
-        // 1) Send email to Admin
+        // 1) Admin mail
         Mail::to(env('ADMIN_ORDER_EMAIL', 'adrahanclothing@gmail.com'))
             ->queue(new AdminNewEnquiry($mailData));
 
-        // 2) Send confirmation email to User
+        // 2) User confirmation mail
         Mail::to($validated['email'])
             ->queue(new UserContactConfirmation($mailData));
 

@@ -238,7 +238,7 @@
 
             <div class="foot">
                 <div>© {{ date('Y') }} Adrahan</div>
-                <a class="small-link" href="{{ config('app.url') }}">Back to Store</a>
+                <a class="small-link" href="{{ route('home')}}">Back to Store</a>
             </div>
         </div>
     </div>

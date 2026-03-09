@@ -30,7 +30,7 @@
 
 <nav class="navbar navbar-expand-lg fixed-top custom-nav {{ request()->routeIs('home') ? '' : 'nav-scrolled' }}">
     <div class="container-fluid px-lg-5">
-        <a class="navbar-brand fw-bold" href="{{ route('home') }}">Adrahan.</a>
+        <a class="navbar-brand fw-bold" href="{{ route('home') }}">Adrahan Clothing.</a>
 
         <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
             <ul class="navbar-nav gap-4">

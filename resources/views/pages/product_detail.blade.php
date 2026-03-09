@@ -47,8 +47,7 @@
                                 @if (count($images) > 1)
                                     <div class="carousel-indicators">
                                         @foreach ($images as $index => $image)
-                                            <button type="button"
-                                                data-bs-target="#productCarousel"
+                                            <button type="button" data-bs-target="#productCarousel"
                                                 data-bs-slide-to="{{ $index }}"
                                                 class="{{ $index == 0 ? 'active' : '' }}"
                                                 aria-current="{{ $index == 0 ? 'true' : 'false' }}"
@@ -61,23 +60,21 @@
                                 <div class="carousel-inner">
                                     @foreach ($images as $index => $image)
                                         <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                                            <img src="{{ asset('storage/' . $image) }}"
-                                                alt="{{ $product->name }}"
-                                                class="img-fluid w-100"
-                                                style="height:520px; object-fit:cover;">
+                                            <img src="{{ asset('storage/' . $image) }}" alt="{{ $product->name }}"
+                                                class="img-fluid w-100" style="height:520px; object-fit:cover;">
                                         </div>
                                     @endforeach
                                 </div>
 
                                 @if (count($images) > 1)
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel"
-                                        data-bs-slide="prev">
+                                    <button class="carousel-control-prev" type="button"
+                                        data-bs-target="#productCarousel" data-bs-slide="prev">
                                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                         <span class="visually-hidden">Previous</span>
                                     </button>
 
-                                    <button class="carousel-control-next" type="button" data-bs-target="#productCarousel"
-                                        data-bs-slide="next">
+                                    <button class="carousel-control-next" type="button"
+                                        data-bs-target="#productCarousel" data-bs-slide="next">
                                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                         <span class="visually-hidden">Next</span>
                                     </button>
@@ -112,7 +109,13 @@
                                 {{ $product->name }}
                             </h1>
 
-                            <div class="d-flex align-items-baseline gap-3 mb-4">
+                            @if (!empty($product->description))
+                                <p class="text-muted mb-4" style="line-height: 1.7;">
+                                    {{ $product->description }}
+                                </p>
+                            @endif
+
+                            <div class="d-flex align-items-baseline gap-3 mb-4 my-5">
                                 <h3 class="fw-bold mb-0">
                                     Rs {{ number_format($finalPrice) }}
                                 </h3>
@@ -133,9 +136,8 @@
                                 <label class="fw-bold small mb-3 d-block">Select Size</label>
 
                                 <div class="d-flex gap-2 flex-wrap">
-                                    @foreach (($product->sizes ?? []) as $size)
-                                        <button type="button"
-                                            class="btn btn-outline-dark size-box rounded-0 size-btn"
+                                    @foreach ($product->sizes ?? [] as $size)
+                                        <button type="button" class="btn btn-outline-dark size-box rounded-0 size-btn"
                                             data-size="{{ $size }}">
                                             {{ $size }}
                                         </button>
@@ -147,7 +149,8 @@
                             <div class="mb-5">
                                 <label class="fw-bold small mb-3 d-block">Quantity</label>
 
-                                <div class="d-flex align-items-center quantity-selector border" style="width: fit-content;">
+                                <div class="d-flex align-items-center quantity-selector border"
+                                    style="width: fit-content;">
                                     <button type="button" class="btn border-0 py-2 px-3" id="qtyMinus">-</button>
                                     <span class="px-3 fw-bold" id="qtyDisplay">1</span>
                                     <button type="button" class="btn border-0 py-2 px-3" id="qtyPlus">+</button>
@@ -162,13 +165,11 @@
                             <div class="d-grid gap-3">
                                 <button type="submit"
                                     class="btn btn-dark rounded-0 py-3 fw-bold text-uppercase d-flex align-items-center justify-content-center gap-2"
-                                    id="addToCartBtn"
-                                    {{ $maxStock <= 0 ? 'disabled' : '' }}>
+                                    id="addToCartBtn" {{ $maxStock <= 0 ? 'disabled' : '' }}>
                                     <i class="bi bi-bag-plus"></i> Add To Cart
                                 </button>
 
-                                <button type="button"
-                                    onclick="window.location='{{ route('checkout.show') }}'"
+                                <button type="button" onclick="window.location='{{ route('checkout.show') }}'"
                                     class="btn btn-outline-dark rounded-0 py-3 fw-bold text-uppercase">
                                     Proceed to Checkout
                                 </button>
@@ -192,18 +193,19 @@
 
     {{-- Minimal styling for badge (optional) --}}
     <style>
-        .badge-tag{
-            background:#111;
-            color:#fff;
-            padding:8px 12px;
-            font-size:12px;
-            letter-spacing:1px;
-            text-transform:uppercase;
+        .badge-tag {
+            background: #111;
+            color: #fff;
+            padding: 8px 12px;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
-        .size-btn.active{
-            background:#111 !important;
-            color:#fff !important;
-            border-color:#111 !important;
+
+        .size-btn.active {
+            background: #111 !important;
+            color: #fff !important;
+            border-color: #111 !important;
         }
     </style>
 
@@ -222,7 +224,9 @@
             const msgEl = document.getElementById('cartToastMsg');
             msgEl.textContent = message;
 
-            const t = new bootstrap.Toast(toastEl, { delay: 2000 });
+            const t = new bootstrap.Toast(toastEl, {
+                delay: 2000
+            });
             t.show();
         }
 

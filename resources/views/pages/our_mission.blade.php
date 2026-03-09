@@ -10,11 +10,11 @@
                     <h1 class="display-5 fw-bold section-title mb-0">Our Mission & Vision</h1>
                 </div>
 
-                
+
             </div>
 
             <p class="text-muted mb-0" style="max-width: 820px;">
-                We design streetwear essentials built for everyday confidence — premium quality, clean aesthetics,
+                We design streetwear essentials built for everyday confidence premium quality, clean aesthetics,
                 and a brand experience that feels modern from product to checkout.
             </p>
         </div>
@@ -35,8 +35,8 @@
                         </div>
 
                         <p class="text-muted mb-0">
-                            To create timeless, wearable streetwear that balances comfort, durability, and style —
-                            while delivering a simple, premium shopping experience for every customer.
+                            At Adrahan Clothing, our mission is to create sustainable, high-quality garments that feel
+                            smooth, clean, and premium while remaining affordable and valuable for our customers
                         </p>
 
                         <hr class="my-4">
@@ -54,7 +54,7 @@
                             </li>
                             <li class="d-flex gap-2">
                                 <i class="bi bi-check2 text-dark"></i>
-                                <span class="text-muted">Make shopping simple — clear pricing, easy checkout, reliable
+                                <span class="text-muted">Make shopping simple clear pricing, easy checkout, reliable
                                     delivery.</span>
                             </li>
                         </ul>
@@ -70,8 +70,8 @@
                         </div>
 
                         <p class="text-muted mb-0">
-                            To become a leading modern fashion brand known for minimal design, high-quality essentials,
-                            and a community that values confidence, individuality, and everyday style.
+                            To become a leading clothing brand known for sustainable fashion, premium comfort, and
+                            accessible quality that delivers true value to everyday consumers.
                         </p>
 
                         <hr class="my-4">
@@ -119,7 +119,7 @@
                             <h3 class="h5 fw-bold mb-0">Quality First</h3>
                         </div>
                         <p class="text-muted mb-0">
-                            Materials and stitching that hold up — because essentials should last beyond the season.
+                            Materials and stitching that hold up because essentials should last beyond the season.
                         </p>
                     </div>
                 </div>
@@ -131,7 +131,7 @@
                             <h3 class="h5 fw-bold mb-0">Minimal Design</h3>
                         </div>
                         <p class="text-muted mb-0">
-                            Clean silhouettes and versatile pieces you can style your way — every day.
+                            Clean silhouettes and versatile pieces you can style your way every day.
                         </p>
                     </div>
                 </div>

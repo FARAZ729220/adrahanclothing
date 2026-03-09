@@ -92,7 +92,7 @@
                             <!-- BUTTONS -->
                             <div class="col-12 mt-5 d-flex gap-3">
                                 <button type="submit" class="btn-save">SAVE PRODUCT</button>
-                                <button type="button" class="btn-cancel">CANCEL</button>
+                                
                             </div>
 
                         </div>
