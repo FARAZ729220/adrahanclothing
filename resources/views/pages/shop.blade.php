@@ -1,4 +1,5 @@
-<x-layout title="Shop | Adrahan">
+<x-layout title="Shop All Products - Adrahan Clothing"
+    description="Browse premium clothing from Adrahan Clothing. Explore modern essentials, clean silhouettes, and elevated everyday wear.">
 
 
     <section class="all-products-section bg-white reveal" style="padding: 100px">

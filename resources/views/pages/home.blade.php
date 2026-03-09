@@ -1,4 +1,5 @@
-<x-layout title="Home | Adrahan">
+<x-layout title="Adrahan Clothing - Premium Minimal Fashion"
+    description="Shop premium minimal fashion at Adrahan Clothing. Discover timeless essentials crafted for everyday style and comfort.">
 
     <header class="hero-section" id="homeHero">
 

@@ -1,4 +1,5 @@
-<x-layout>
+<x-layout title="Privacy Policy - Adrahan Clothing"
+    description="Read the Privacy Policy of Adrahan Clothing to understand how we collect, use, and protect your personal information.">
     <section class="privacy-section py-5" style="background:#f8f5f0;">
         <div class="container py-5">
             <div class="text-center mb-5">
@@ -61,7 +62,7 @@
                         </p>
                     </div>
 
-                    
+
 
                     <div class="policy-card mb-4">
                         <h2>Social Media Features and Widgets</h2>

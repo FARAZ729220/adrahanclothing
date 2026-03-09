@@ -1,4 +1,5 @@
-<x-layout>
+<x-layout title="Contact Us - Adrahan Clothing"
+    description="Get in touch with Adrahan Clothing for support, product enquiries, orders, and general questions.">
     <section class="contact-section py-5 bg-white">
         <div class="container py-5">
             <div class="text-center mb-5">
@@ -11,7 +12,8 @@
                     <div class="alert alert-success alert-dismissible fade show mx-auto"
                         style="max-width: 420px; background: #999999; font-weight: 700; color: #f6f3f3; border: none;">
                         {{ session('success') }}
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
+                            aria-label="Close"></button>
                     </div>
                 @endif
             </div>
@@ -97,8 +99,7 @@
 
                                 <div class="col-md-12">
                                     <label class="form-label small fw-bold">Message *</label>
-                                    <textarea class="form-control rounded-1 @error('description') is-invalid @enderror"
-                                        name="description" rows="4"
+                                    <textarea class="form-control rounded-1 @error('description') is-invalid @enderror" name="description" rows="4"
                                         placeholder="Tell us how we can help...">{{ old('description') }}</textarea>
                                     @error('description')
                                         <small class="text-danger d-block mt-1">{{ $message }}</small>

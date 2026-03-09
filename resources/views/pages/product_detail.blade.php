@@ -1,4 +1,4 @@
-<x-layout>
+<x-layout :title="$product->name . ' - Adrahan Clothing'" :description="$product->description ?: 'Shop ' . $product->name . ' at Adrahan Clothing.'">
     @php
         $originalPrice = (float) ($product->price ?? 0);
         $finalPrice = $originalPrice;

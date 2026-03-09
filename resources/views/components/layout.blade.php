@@ -5,6 +5,7 @@
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <title>{{ $title ?? 'Adrahan Clothing ' }}</title>
+     <meta name="description" content="{{ $description ?? 'Shop premium clothing at Adrahan Clothing. Discover modern wardrobe essentials with clean design and quality fabrics.' }}">
      <link href="{{ asset('css/bootstrap/bootstrap.min.css') }}" rel="stylesheet" />
      <link href="{{ asset('css/css2/css2.css') }}" rel="stylesheet" />
      <link href="{{ asset('css/aos/aos.css') }}" rel="stylesheet" />
