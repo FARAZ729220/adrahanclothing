@@ -160,7 +160,7 @@
             </div>
 
             {{-- Errors / success --}}
-            @if ($errors->any())
+            {{-- @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul class="mb-0">
                         @foreach ($errors->all() as $e)
@@ -168,7 +168,7 @@
                         @endforeach
                     </ul>
                 </div>
-            @endif
+            @endif --}}
 
             @if (session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
@@ -181,31 +181,46 @@
                     <div class="checkout-card border p-4">
 
                         <form action="{{ route('checkout.place') }}" method="POST" enctype="multipart/form-data"
-                            id="checkoutForm">
+                            id="checkoutForm" novalidate>
                             @csrf
 
                             <div class="mb-3">
                                 <label class="fw-bold small mb-2 d-block">Full Name</label>
-                                <input name="name" class="form-control rounded-0" required
-                                    value="{{ old('name') }}">
+                                <input name="name" class="form-control rounded-0 @error('name') is-invalid @enderror"
+                                    required value="{{ old('name') }}">
+                                @error('name')
+                                    <small class="text-danger d-block mt-1">{{ $message }}</small>
+                                @enderror
                             </div>
 
                             <div class="mb-3">
                                 <label class="fw-bold small mb-2 d-block">Email <span
-                                        class="text-muted">(optional)</span></label>
-                                <input name="email" type="email" class="form-control rounded-0"
+                                        class="text-muted"></span></label>
+                                <input name="email" type="email"
+                                    class="form-control rounded-0 @error('email') is-invalid @enderror"
                                     value="{{ old('email') }}">
+                                @error('email')
+                                    <small class="text-danger d-block mt-1">{{ $message }}</small>
+                                @enderror
                             </div>
 
                             <div class="mb-3">
                                 <label class="fw-bold small mb-2 d-block">Phone</label>
-                                <input name="phone" class="form-control rounded-0" required
+                                <input name="phone"
+                                    class="form-control rounded-0 @error('phone') is-invalid @enderror" required
                                     value="{{ old('phone') }}">
+                                @error('phone')
+                                    <small class="text-danger d-block mt-1">{{ $message }}</small>
+                                @enderror
                             </div>
 
                             <div class="mb-3">
                                 <label class="fw-bold small mb-2 d-block">Shipping Address</label>
-                                <textarea name="shipping_address" class="form-control rounded-0" rows="4" required>{{ old('shipping_address') }}</textarea>
+                                <textarea name="shipping_address" class="form-control rounded-0 @error('shipping_address') is-invalid @enderror"
+                                    rows="4" required>{{ old('shipping_address') }}</textarea>
+                                @error('shipping_address')
+                                    <small class="text-danger d-block mt-1">{{ $message }}</small>
+                                @enderror
                             </div>
 
                             <hr class="my-4">
@@ -226,6 +241,10 @@
                                         <span>Online (Manual)</span>
                                     </label>
                                 </div>
+
+                                @error('payment_method')
+                                    <small class="text-danger d-block mt-2">{{ $message }}</small>
+                                @enderror
                             </div>
 
                             {{-- Manual Payment Box --}}
@@ -233,7 +252,7 @@
                                 <p class="fw-bold mb-2">Payment Details</p>
 
                                 <div class="text-muted small">
-                                    <div class="fw-semibold text-dark">{{ $account['title'] }}</div>
+                                    <div class="fw-semibold text-dark">Muneeb ur Rehman</div>
                                     <div class="mt-1">
                                         Account:
                                         <span class="fw-bold text-dark">{{ $account['number'] }}</span>
@@ -241,20 +260,43 @@
                                     <div class="small mt-2">{{ $account['note'] }}</div>
                                 </div>
 
+                                <hr>
+
+                                <div class="text-muted small my-3">
+                                    <div class="fw-semibold text-dark">Muneeb ur Rehman</div>
+                                    <div class="mt-1">
+                                        Account:
+                                        <span class="fw-bold text-dark">Bank Al Habib: 10680048015336016</span>
+                                    </div>
+                                    <div class="small mt-2">{{ $account['note'] }}</div>
+                                </div>
+
+                                <hr>
+
                                 <div class="mt-3">
                                     <label class="fw-bold small mb-2 d-block">
                                         Upload Payment Screenshot <span class="text-danger">*</span>
                                     </label>
-                                    <input type="file" name="payment_proof" class="form-control rounded-0"
+                                    <input type="file" name="payment_proof"
+                                        class="form-control rounded-0 @error('payment_proof') is-invalid @enderror"
                                         accept="image/*" id="paymentProof">
                                     <div class="small text-muted mt-1">jpg/png/webp • max 2MB</div>
+                                    <small class="text-danger d-none mt-1" id="proofError">Payment screenshot is
+                                        required.</small>
+                                    @error('payment_proof')
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
+                                    @enderror
                                 </div>
 
                                 <div class="mt-3">
                                     <label class="fw-bold small mb-2 d-block">Reference Note <span
                                             class="text-muted">(optional)</span></label>
-                                    <input type="text" name="payment_reference_note" class="form-control rounded-0"
+                                    <input type="text" name="payment_reference_note"
+                                        class="form-control rounded-0 @error('payment_reference_note') is-invalid @enderror"
                                         value="{{ old('payment_reference_note') }}" placeholder="Txn id / sender name">
+                                    @error('payment_reference_note')
+                                        <small class="text-danger d-block mt-1">{{ $message }}</small>
+                                    @enderror
                                 </div>
                             </div>
 
@@ -334,4 +376,50 @@
 
     radios.forEach(r => r.addEventListener('change', toggleManual));
     toggleManual();
+</script>
+<script>
+    const checkoutForm = document.getElementById('checkoutForm');
+    const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
+    const manualBox = document.getElementById('manualBox');
+    const paymentProof = document.getElementById('paymentProof');
+    const proofError = document.getElementById('proofError');
+
+    function toggleManualBox() {
+        const selected = document.querySelector('input[name="payment_method"]:checked')?.value;
+
+        if (selected === 'online_manual') {
+            manualBox.style.display = 'block';
+            paymentProof.setAttribute('required', 'required');
+        } else {
+            manualBox.style.display = 'none';
+            paymentProof.removeAttribute('required');
+            proofError.classList.add('d-none');
+        }
+    }
+
+    paymentRadios.forEach(radio => {
+        radio.addEventListener('change', toggleManualBox);
+    });
+
+    toggleManualBox();
+
+    checkoutForm.addEventListener('submit', function(e) {
+        const selected = document.querySelector('input[name="payment_method"]:checked')?.value;
+
+        if (!checkoutForm.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+            checkoutForm.reportValidity();
+            return;
+        }
+
+        if (selected === 'online_manual' && !paymentProof.files.length) {
+            e.preventDefault();
+            proofError.classList.remove('d-none');
+            paymentProof.focus();
+            return;
+        }
+
+        proofError.classList.add('d-none');
+    });
 </script>

@@ -27,7 +27,7 @@ class CheckoutController extends Controller
         // ✅ Validate checkout fields
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:100'],
-            'email' => ['nullable', 'email', 'max:150'],
+            'email' => ['required', 'email', 'max:150'],
             'phone' => ['required', 'string', 'max:30'],
             'shipping_address' => ['required', 'string', 'max:500'],
             'payment_method' => ['required', 'in:cod,online_manual'],
@@ -217,34 +217,7 @@ class CheckoutController extends Controller
         }
     }
 
-    // public function showCheckout()
-    // {
-    //     $cart = session()->get('cart', []);
 
-    //     if (empty($cart)) {
-    //         return redirect()->route('cart.index')->withErrors('Cart is empty.');
-    //     }
-
-    //     $items = collect($cart)->values();
-
-    //     $subtotal = $items->sum(fn ($i) => ((float) $i['price']) * ((int) $i['qty']));
-
-    //     $shipping = (int) session('shipping_fee', 200);
-    //     if ($items->count() === 0) {
-    //         $shipping = 0;
-    //     }
-
-    //     $total = $subtotal + $shipping;
-
-    //     // Manual payment account details (static for now)
-    //     $account = [
-    //         'title' => env('MANUAL_PAYMENT_TITLE', 'Adrahan Store'),
-    //         'number' => env('MANUAL_PAYMENT_ACCOUNT', 'Easypaisa/JazzCash: 0300-1234567'),
-    //         'note' => env('MANUAL_PAYMENT_NOTE', 'Please make the payment and upload the screenshot. The order will be confirmed after admin verification.'),
-    //     ];
-
-    //     return view('pages.checkout', compact('items', 'subtotal', 'shipping', 'total', 'account'));
-    // }
 
     public function showCheckout()
     {
@@ -265,7 +238,7 @@ class CheckoutController extends Controller
 
         $account = [
             'title' => env('MANUAL_PAYMENT_TITLE', 'Adrahan Store'),
-            'number' => env('MANUAL_PAYMENT_ACCOUNT', 'Easypaisa/JazzCash: 0300-1234567'),
+            'number' => env('MANUAL_PAYMENT_ACCOUNT', 'NayaPay: 0334-2093983'),
             'note' => env('MANUAL_PAYMENT_NOTE', 'Please make the payment and upload the screenshot. The order will be confirmed after admin verification.'),
         ];
 
