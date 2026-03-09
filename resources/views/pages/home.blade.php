@@ -1,6 +1,6 @@
 <x-layout title="Home | Adrahan">
 
-    <header class="hero-section">
+    <header class="hero-section" id="homeHero">
 
         <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
 

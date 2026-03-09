@@ -10,38 +10,57 @@ body {
     padding: 0;
 }
 
-/* Navigation Styling - Default (Top of Page) */
 .custom-nav {
-    padding: 1.5rem 0; /* Slightly larger at top */
+    padding: 1.5rem 0;
     transition: all 0.4s ease-in-out;
-    border-bottom: 1px solid rgba(255, 255, 255, 0); /* Transparent border */
-    background-color: transparent; /* Fully transparent */
-    backdrop-filter: blur(0px); /* No blur at start */
-    -webkit-backdrop-filter: blur(0px);
+    background: transparent !important;
+    border-bottom: 1px solid transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
 }
 
-/* Scroll State - Triggered by JS */
+.custom-nav {
+    transition:
+        background 0.35s ease,
+        backdrop-filter 0.35s ease,
+        padding 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
 .custom-nav.nav-scrolled {
-    padding: 1rem 0; /* Shrinks slightly */
-    background-color: rgba(0, 0, 0, 0.4); /* Dark tint */
-    backdrop-filter: blur(15px); /* Strong blur effect */
-    -webkit-backdrop-filter: blur(15px);
+    padding: 1rem 0;
+    background: rgba(0, 0, 0, 0.35) !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* Ensure the logo and links stay visible */
 .custom-nav .navbar-brand,
-.nav-icon {
+.custom-nav .nav-icon,
+.custom-nav .navbar-toggler {
     color: #fff !important;
+}
+
+.custom-nav .navbar-brand {
+    transition: transform 0.3s ease;
+}
+
+.custom-nav.nav-scrolled .navbar-brand {
+    transform: scale(0.95);
 }
 
 .custom-nav .nav-link {
-    color: rgba(255, 255, 255, 0.7) !important;
+    color: rgba(255, 255, 255, 0.75) !important;
+    transition: color 0.3s ease;
 }
 
-.custom-nav .nav-link:hover {
+.custom-nav .nav-link:hover,
+.custom-nav .nav-link.active {
     color: #fff !important;
 }
+
 /* Hero Container */
 .hero-section {
     position: relative;
@@ -57,38 +76,36 @@ body {
     transition: transform 0.5s ease;
 }
 
-.hero-section{
-height:100vh;
-position:relative;
-overflow:hidden;
+.hero-section {
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
 }
 
-.hero-slide{
-height:100vh;
-background-size:cover;
-background-position:center;
+.hero-slide {
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
 }
 
 .hero-overlay {
     position: absolute;
-    inset: 0;                 /* top:0 left:0 right:0 bottom:0 */
+    inset: 0; /* top:0 left:0 right:0 bottom:0 */
     width: 100%;
     height: 100%;
-    display: flex;            /* ✅ center system */
-    align-items: center;      /* ✅ vertical center */
-    justify-content: center;  /* ✅ horizontal center */
+    display: flex; /* ✅ center system */
+    align-items: center; /* ✅ vertical center */
+    justify-content: center; /* ✅ horizontal center */
     text-align: center;
-    background: rgba(0, 0, 0, 0.20);
+    background: rgba(0, 0, 0, 0.2);
     z-index: 10;
     padding: 20px;
 }
 
-.mw-500{
-    max-width:520px;
+.mw-500 {
+    max-width: 520px;
     margin: 0 auto;
 }
-
-
 
 /* Typography & Content Overlay */
 .hero-overlay {
@@ -676,6 +693,18 @@ background-position:center;
     }
 }
 
+#cartCountBadge {
+    animation: badgePop 0.25s ease;
+}
+
+@keyframes badgePop {
+    0% {
+        transform: scale(0.6);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
 /* =========================================
    Scroll Reveal Animations (Smoother)
    ========================================= */

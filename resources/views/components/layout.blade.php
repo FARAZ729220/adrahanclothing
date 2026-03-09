@@ -38,15 +38,15 @@
              const nav = document.querySelector('.custom-nav');
              if (!nav) return;
 
-             const hero = document.querySelector('#homeHero'); // only exists on home
+             const hero = document.getElementById('homeHero');
 
-             // If NOT on home/hero page, navbar must be visible from start
+             // Non-home pages: always blurred
              if (!hero) {
                  nav.classList.add('nav-scrolled');
                  return;
              }
 
-             // Normal behavior on hero pages
+             // Home page: transparent at top, blurred on scroll
              if (window.scrollY > 50) {
                  nav.classList.add('nav-scrolled');
              } else {
@@ -56,6 +56,7 @@
 
          window.addEventListener('scroll', handleNavbar);
          window.addEventListener('load', handleNavbar);
+         document.addEventListener('DOMContentLoaded', handleNavbar);
 
          window.setCartBadge = function(count) {
              const badge = document.getElementById('cartCountBadge');
@@ -69,9 +70,8 @@
              } else {
                  badge.style.display = 'none';
              }
-         }; // ✅ IMPORTANT: semicolon here
+         };
 
-         // ✅ Scroll Reveal (IntersectionObserver)
          (function() {
              const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
 
@@ -89,8 +89,8 @@
                      }
                  });
              }, {
-                 threshold: 0.08, // triggers earlier
-                 rootMargin: '0px 0px -5% 0px' // less aggressive cutoff
+                 threshold: 0.08,
+                 rootMargin: '0px 0px -5% 0px'
              });
 
              revealEls.forEach(el => io.observe(el));

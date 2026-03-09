@@ -4,13 +4,12 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AdminCategoryController;
 use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\AdminProductController;
+use App\Http\Controllers\AdminSettingsController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\AdminSettingsController;
 use App\Http\Controllers\StorefrontController;
 use App\Models\Order;
 use App\Models\Product;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,6 +26,8 @@ Route::get('/our-mission-vision', [StorefrontController::class, 'our_mission'])-
 
 Route::get('/product/{slug}', [StorefrontController::class, 'productShow'])->name('product.show');
 
+Route::view('/privacy-policy', 'pages.privacy_policy')->name('privacy.policy');
+
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
@@ -38,14 +39,6 @@ Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])-
 Route::get('/order-success/{order_number}', [CheckoutController::class, 'success'])
     ->name('checkout.success');
 
-Route::get('/test-mail', function () {
-    Mail::raw('Test email from Adrahan Clothing', function ($message) {
-        $message->to(env('ADMIN_ORDER_EMAIL'))
-            ->subject('Test Mail');
-    });
-
-    return 'Mail sent (check inbox/spam).';
-});
 /*
 |--------------------------------------------------------------------------
 | ADMIN AUTH ROUTES

@@ -14,6 +14,7 @@
                     <li><a href="{{ route('shop') }}">Shop</a></li>
                     <li><a href="{{ route('contact.us') }}">Contact Us</a></li>
                     <li><a href="{{ route('mission') }}">Our Mission</a></li>
+                    <li><a href="{{ route('privacy.policy') }}">Privacy Policy</a></li>
 
                 </ul>
             </div>
