@@ -61,14 +61,7 @@
                         </p>
                     </div>
 
-                    <div class="policy-card mb-4">
-                        <h2>Newsletter and Promotional Communications</h2>
-                        <p>
-                            If you no longer wish to receive newsletters or promotional emails from Adrahan Clothing,
-                            you may opt out at any time by following the unsubscribe instructions included in the email
-                            or by contacting us directly.
-                        </p>
-                    </div>
+                    
 
                     <div class="policy-card mb-4">
                         <h2>Social Media Features and Widgets</h2>
