@@ -109,6 +109,11 @@ Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
 
     Route::post('settings/update', [AdminSettingsController::class, 'setting_update'])->name('admin.settings.update');
 
+    Route::get('/contacts', [AdminAuthController::class, 'admin_contacts'])->name('admin.contacts');
+    Route::get('/contacts/{id}', [AdminAuthController::class, 'admin_contacts_details'])->name('admin.contacts.details');
+    Route::delete('/contacts/{id}', [AdminAuthController::class, 'admin_contact_delete'])
+        ->name('contact.destroy');
+
     Route::post('/logout', [AdminAuthController::class, 'logout'])
         ->name('admin.logout');
 

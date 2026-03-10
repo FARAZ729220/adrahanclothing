@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Contact;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -55,6 +56,33 @@ class AdminAuthController extends Controller
             'outOfStockProducts',
             'lowStockProducts',
         ));
+    }
+
+    public function admin_contacts()
+    {
+        $contacts = Contact::latest()->get();
+
+        return view('admin.contact.contacts', compact('contacts'));
+    }
+
+    public function admin_contacts_details($id)
+    {
+        $contact = contact::findOrFail($id);
+
+        return view('admin.contact.contact_detail', compact('contact'));
+    }
+
+    public function admin_contact_delete($id)
+    {
+        $contact = contact::findOrFail($id);
+
+        if ($contact->proof_image) {
+            Storage::disk('public')->delete($contact->proof_image);
+        }
+
+        $contact->delete();
+
+        return redirect()->back()->with('success', 'Contact deleted successfully.');
     }
 
     public function login(Request $request)
