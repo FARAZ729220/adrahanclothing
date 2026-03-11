@@ -1,9 +1,8 @@
 <x-layout title="Mission & Vision | Adrahan">
 
     {{-- HERO --}}
-    <section class="bg-white" style="padding: 100px">
-        <div class="container py-lg-4">
-
+    <section class="bg-white mission-hero-section">
+        <div class="container pt-4" style="padding-bottom: 40px !important;">
             <div class="d-flex align-items-center justify-content-between mb-4">
                 <div>
                     <p class="text-uppercase small text-muted ls-2 mb-1">About Adrahan</p>
@@ -21,7 +20,7 @@
     </section>
 
     {{-- MISSION + VISION --}}
-    <section class="py-5 bg-white">
+    <section class="pt-2 pb-5 bg-white">
         <div class="container">
 
             <div class="row g-4">
@@ -171,17 +170,49 @@
 
     {{-- Small page-only helpers --}}
     <style>
+        /* Navbar offset (adjust as per your actual navbar height) */
+        .mission-hero-section {
+            padding-top: 100px !important;
+            padding-bottom: 0 !important;
+        }
+
+        @media (min-width: 992px) {
+            .mission-hero-section {
+                padding-top: 130px !important;
+                /* Desktop spacing */
+            }
+        }
+
         .ls-2 {
             letter-spacing: 2px;
         }
 
         .section-title {
-            font-family: inherit;
+            /* User preference: 'Playfair Display' for headers */
+            font-family: "Playfair Display", serif;
+            color: #000;
         }
 
-        /* matches your Shop styling */
+        /* Mobile specific container breathing room */
+        @media (max-width: 576px) {
+            .display-5 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding-left: 20px !important;
+                padding-right: 20px !important;
+            }
+        }
+
+        /* Professional border style */
         .border {
-            border-color: rgba(0, 0, 0, 0.12) !important;
+            border-color: rgba(0, 0, 0, 0.08) !important;
+            transition: all 0.3s ease;
+        }
+
+        .border:hover {
+            border-color: #000 !important;
         }
     </style>
 

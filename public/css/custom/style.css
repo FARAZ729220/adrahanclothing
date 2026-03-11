@@ -445,7 +445,6 @@ body {
     }
 }
 
-
 /* Typography for Section */
 .section-title {
     font-family: "Playfair Display", serif;
@@ -529,7 +528,7 @@ body {
     }
 
     /* Product Title: Isay 2 lines tak fix rakhega */
-   .product-name {
+    .product-name {
         font-size: 0.75rem !important; /* Thora chota taake space mile */
         min-height: 35px;
         line-height: 1.2;
@@ -540,14 +539,14 @@ body {
         overflow: hidden;
     }
 
-   .product-info .d-flex {
+    .product-info .d-flex {
         flex-direction: column !important;
         align-items: flex-start !important;
         gap: 0px !important; /* Gap khatam kar ke manual spacing denge */
         min-height: 50px; /* Sab cards ka price area ek jitna bada hoga */
     }
 
-   .new-price {
+    .new-price {
         font-size: 0.9rem !important;
         font-weight: 700;
         display: block;
@@ -559,7 +558,7 @@ body {
         display: block;
     }
 
-   .stock-status {
+    .stock-status {
         font-size: 0.6rem !important;
         color: #999 !important;
         margin-top: 2px;
@@ -641,65 +640,83 @@ body {
     }
 }
 
+
+.footer {
+    /* Subtle top border like image reference */
+    border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
 /* Footer Headings - using the Serif font from your reference */
 .footer-logo {
-    font-family: "Playfair Display", serif; /* Or your chosen Serif font */
-    font-size: 1.5rem;
+    font-family: "Playfair Display", serif;
+    font-size: 1.4rem;
     letter-spacing: -0.5px;
 }
 
 .footer-heading {
     font-family: "Playfair Display", serif;
-    font-size: 1.1rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     color: #000;
 }
 
 /* Link Styling */
 .footer-list li {
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 .footer-list a {
-    text-decoration: none;
-    color: #6c757d; /* Bootstrap text-muted */
-    font-size: 0.9rem;
-    transition: color 0.2s ease;
+    color: #6c757d;
+    font-size: 0.85rem;
+    transition: 0.3s;
 }
 
 .footer-list a:hover {
     color: #000;
+    padding-left: 5px; /* Subtle hover effect */
 }
 
-/* Social Icons - Circular outlines */
 .social-circle {
-    width: 38px;
-    height: 38px;
-    border: 1px solid #dee2e6; /* Light gray border */
+    width: 40px;
+    height: 40px;
+    border: 1px solid #eee;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #000;
-    text-decoration: none;
-    transition: all 0.3s ease;
+    color: #333;
+    transition: 0.3s all ease;
 }
 
 .social-circle:hover {
-    background-color: #000;
+    background: #000;
     color: #fff;
     border-color: #000;
 }
 
-/* Copyright line */
 .copyright-text {
-    color: #6c757d;
-    font-size: 0.8rem;
-    letter-spacing: 0.3px;
+    font-size: 0.75rem;
+    color: #999;
+    letter-spacing: 0.5px;
 }
 
-/* Border color adjustment to be very subtle like the image */
-.border-top {
-    border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+/* Desktop View Spacing Fix */
+@media (min-width: 992px) {
+    .footer {
+        padding-top: 60px;
+        padding-bottom: 40px;
+    }
+}
+
+/* Mobile View Alignment Fix */
+@media (max-width: 768px) {
+    .footer-heading {
+        margin-top: 10px;
+    }
+    .footer-list a {
+        font-size: 0.95rem; /* Better readability on mobile */
+    }
 }
 
 /* shop page */
