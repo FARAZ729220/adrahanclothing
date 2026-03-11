@@ -7,7 +7,7 @@
 
             <div class="carousel-inner">
 
-                {{-- IMAGE 1 --}}
+
                 @if ($settings && $settings->hero_image_1)
                     <div class="carousel-item active hero-slide"
                         style="background-image:url('{{ asset('storage/' . $settings->hero_image_1) }}')">
@@ -15,7 +15,7 @@
                 @endif
 
 
-                {{-- IMAGE 2 --}}
+
                 @if ($settings && $settings->hero_image_2)
                     <div class="carousel-item hero-slide"
                         style="background-image:url('{{ asset('storage/' . $settings->hero_image_2) }}')">
@@ -35,7 +35,7 @@
         </div>
 
 
-        {{-- HERO TEXT --}}
+
         <div class="hero-overlay text-white">
 
             <div class="hero-content">

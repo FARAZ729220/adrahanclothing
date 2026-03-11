@@ -1,4 +1,4 @@
-<x-layout title="Shop All Products - Adrahan Clothing"
+{{-- <x-layout title="Shop All Products - Adrahan Clothing"
     description="Browse premium clothing from Adrahan Clothing. Explore modern essentials, clean silhouettes, and elevated everyday wear.">
 
 
@@ -130,35 +130,36 @@
         </div>
     </section>
 
-</x-layout>
+</x-layout> --}}
 
 
 
 
+<x-layout title="Shop All Products - Adrahan Clothing" description="Browse premium clothing from Adrahan Clothing.">
 
-{{-- <section id="all-products" class="all-products-section py-5">
-        <div class="container py-5">
+    <section class="all-products-section bg-white reveal">
+        <div class="container py-4">
 
-            <div class="row mb-4 text-start">
-                <div class="col-12">
-                    <h2 class="display-4 fw-black text-white m-0"><span class="gradient-text">Products</span></h2>
-                    <p class="text-light opacity-75 small mt-2">Browse the full collection.</p>
-                </div>
+            <div class="mb-4">
+                <h2 class="display-6 fw-bold section-title mb-1">All Products</h2>
+                <p class="text-muted small">Browse the full collection.</p>
             </div>
 
-            <div class="row mb-5">
-                <div class="col-12 d-flex flex-wrap gap-2 filter-container">
-                    <a href="{{ route('shop') }}"
-                        class="btn filter-btn {{ empty($selectedSlug) ? 'active' : '' }}">All</a>
-                    @foreach ($categories as $cat)
-                        <a href="{{ route('shop', ['category' => $cat->slug]) }}"
-                            class="btn filter-btn {{ $selectedSlug === $cat->slug ? 'active' : '' }}">{{ strtoupper($cat->name) }}</a>
-                    @endforeach
+            <div class="filter-wrapper mb-4">
+                <a href="{{ route('shop') }}"
+                    class="btn {{ empty($selectedSlug) ? 'btn-dark' : 'btn-outline-secondary text-dark' }} rounded-0 px-3 py-2 text-uppercase fw-bold small">
+                    All
+                </a>
 
-                </div>
+                @foreach ($categories as $cat)
+                    <a href="{{ route('shop', ['category' => $cat->slug]) }}"
+                        class="btn {{ $selectedSlug === $cat->slug ? 'btn-dark' : 'btn-outline-secondary text-dark' }} rounded-0 px-3 py-2 text-uppercase small">
+                        {{ strtoupper($cat->name) }}
+                    </a>
+                @endforeach
             </div>
 
-            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 gx-4 gx-lg-5 gy-5 product-grid">
+            <div class="row g-3 g-md-4 reveal-stagger">
 
                 @forelse($products as $product)
                     @php
@@ -179,75 +180,61 @@
                         }
                     @endphp
 
-                    <div class="col product-card-container">
+                    <div class="col-6 col-md-4 col-lg-3">
                         <a href="{{ route('product.show', $product->slug) }}" class="text-decoration-none text-dark">
-
-                            <div class="product-card shadow-sm">
-                                <div class="img-wrapper position-relative">
-                                    <img src="{{ $img }}" alt="{{ $product->name }}">
-
-
+                            <div class="product-card h-100">
+                                <div class="product-img-container position-relative">
                                     @if ($oldPrice)
-                                        <span class="badge bg-danger position-absolute top-0 start-0 m-2">
-                                            @if ($product->discount_type === 'percent')
-                                                {{ (int) $product->discount_value }}% OFF
-                                            @else
-                                                PKR {{ (int) $product->discount_value }} OFF
-                                            @endif
+                                        <span class="badge-discount">
+                                            {{ $product->discount_type === 'percent' ? (int) $product->discount_value . '%' : 'PKR ' . (int) $product->discount_value }}
+                                            OFF
                                         </span>
                                     @endif
+                                    <img src="{{ $img }}" alt="{{ $product->name }}" class="img-fluid w-100">
                                 </div>
-                            </div>
 
-                            <div class="product-info mt-3">
-                                <p class="product-name m-0 fw-bold tiny-text text-white">
-                                    {{ $product->name }}
-                                </p>
+                                <div class="product-info mt-2">
+                                    <h6 class="product-name mb-1 text-truncate-2">
+                                        {{ $product->name }}
+                                    </h6>
 
-                                <div class="d-flex justify-content-between align-items-center mt-1">
-
-
-                                    <div class="price-box">
-                                        @if ($oldPrice)
-                                            <span
-                                                class="old-price text-secondary tiny-text text-decoration-line-through me-1">
-                                                PKR {{ number_format($oldPrice, 0) }}
+                                    <div class="d-flex flex-column">
+                                        <div class="price-box">
+                                            @if ($oldPrice)
+                                                <small class="text-muted text-decoration-line-through d-block"
+                                                    style="font-size: 0.7rem;">
+                                                    PKR {{ number_format($oldPrice, 0) }}
+                                                </small>
+                                            @endif
+                                            <span class="new-price fw-bold">
+                                                PKR {{ number_format($newPrice, 0) }}
                                             </span>
-                                        @endif
+                                        </div>
 
-                                        <span class="product-price fw-bold tiny-text">
-                                            PKR {{ number_format($newPrice, 0) }}
-                                        </span>
-                                    </div>
-
-
-                                    <div class="stock-box">
-                                        <p class="text-secondary m-0 stock-text">
+                                        <span class="stock-status text-muted" style="font-size: 0.65rem;">
                                             @if ($product->stock > 0)
                                                 In Stock: {{ $product->stock }}
                                             @else
-                                                <span class="text-danger">Out of Stock</span>
+                                                <span class="text-danger">Sold Out</span>
                                             @endif
-                                        </p>
+                                        </span>
                                     </div>
-
                                 </div>
                             </div>
-
                         </a>
                     </div>
-
                 @empty
                     <div class="col-12 text-center py-5">
-                        <p class="mb-0">No products found for this category.</p>
+                        <p>No products found.</p>
                     </div>
                 @endforelse
 
             </div>
 
-
-            <div class="mt-4">
+            <div class="mt-5 d-flex justify-content-center">
                 {{ $products->links() }}
             </div>
+
         </div>
-    </section> --}}
+    </section>
+</x-layout>

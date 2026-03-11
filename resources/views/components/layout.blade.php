@@ -5,7 +5,13 @@
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <title>{{ $title ?? 'Adrahan Clothing ' }}</title>
-     <meta name="description" content="{{ $description ?? 'Shop premium clothing at Adrahan Clothing. Discover modern wardrobe essentials with clean design and quality fabrics.' }}">
+
+     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('icons/apple-touch-icon.png') }}">
+     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('icons/favicon-32x32.png') }}">
+     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('icons/favicon-16x16.png') }}">
+     <link rel="manifest" href="{{ asset('icons/site.webmanifest') }}">
+     <meta name="description"
+         content="{{ $description ?? 'Shop premium clothing at Adrahan Clothing. Discover modern wardrobe essentials with clean design and quality fabrics.' }}">
      <link href="{{ asset('css/bootstrap/bootstrap.min.css') }}" rel="stylesheet" />
      <link href="{{ asset('css/css2/css2.css') }}" rel="stylesheet" />
      <link href="{{ asset('css/aos/aos.css') }}" rel="stylesheet" />
@@ -35,30 +41,6 @@
      {{ $scripts ?? '' }}
 
      <script>
-         function handleNavbar() {
-             const nav = document.querySelector('.custom-nav');
-             if (!nav) return;
-
-             const hero = document.getElementById('homeHero');
-
-             // Non-home pages: always blurred
-             if (!hero) {
-                 nav.classList.add('nav-scrolled');
-                 return;
-             }
-
-             // Home page: transparent at top, blurred on scroll
-             if (window.scrollY > 50) {
-                 nav.classList.add('nav-scrolled');
-             } else {
-                 nav.classList.remove('nav-scrolled');
-             }
-         }
-
-         window.addEventListener('scroll', handleNavbar);
-         window.addEventListener('load', handleNavbar);
-         document.addEventListener('DOMContentLoaded', handleNavbar);
-
          window.setCartBadge = function(count) {
              const badge = document.getElementById('cartCountBadge');
              if (!badge) return;
@@ -96,6 +78,45 @@
 
              revealEls.forEach(el => io.observe(el));
          })();
+
+         const mobileDrawer = document.getElementById('mobileDrawer');
+         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+         const mobileDrawerClose = document.getElementById('mobileDrawerClose');
+         const mobileDrawerBackdrop = document.getElementById('mobileDrawerBackdrop');
+
+         function openMobileDrawer() {
+             if (!mobileDrawer) return;
+             mobileDrawer.classList.add('open');
+             document.body.style.overflow = 'hidden';
+         }
+
+         function closeMobileDrawer() {
+             if (!mobileDrawer) return;
+             mobileDrawer.classList.remove('open');
+             document.body.style.overflow = '';
+         }
+
+         if (mobileMenuToggle) {
+             mobileMenuToggle.addEventListener('click', openMobileDrawer);
+         }
+
+         if (mobileDrawerClose) {
+             mobileDrawerClose.addEventListener('click', closeMobileDrawer);
+         }
+
+         if (mobileDrawerBackdrop) {
+             mobileDrawerBackdrop.addEventListener('click', closeMobileDrawer);
+         }
+
+         document.querySelectorAll('.mobile-drawer-nav a').forEach(link => {
+             link.addEventListener('click', closeMobileDrawer);
+         });
+
+         window.addEventListener('resize', function() {
+             if (window.innerWidth >= 992) {
+                 closeMobileDrawer();
+             }
+         });
      </script>
  </body>
 
