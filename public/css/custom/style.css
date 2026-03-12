@@ -11,17 +11,8 @@ body {
 }
 
 .custom-nav {
-    padding: 0.55rem 0;
-    transition: all 0.35s ease;
-
-    background: rgba(0, 0, 0, 0.35) !important;
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-
-    z-index: 1040;
+    /* Jab image navbar ke peeche nahi hai, toh background solid hona chahiye */
+    background: #000 !important;
 }
 
 .custom-nav.nav-scrolled {
@@ -352,99 +343,88 @@ body {
         min-width: 110px;
     }
 }
-/* Hero Container */
+
+/* --- DESKTOP VIEW --- */
 .hero-section {
     position: relative;
-    height: 100vh;
+    height: calc(100vh - 80px);
+    margin-top: 80px;
     width: 100%;
     overflow: hidden;
-}
-
-.hero-panel {
-    height: 100vh;
-    background-size: cover;
-    background-position: center;
-    transition: transform 0.5s ease;
-}
-
-.hero-section {
-    height: 100vh;
-    position: relative;
-    overflow: hidden;
+    background-color: #000;
 }
 
 .hero-slide {
-    height: 100vh;
+    height: calc(100vh - 80px);
     background-size: cover;
-    background-position: center;
+    background-position: center top;
+    background-repeat: no-repeat;
 }
 
 .hero-overlay {
     position: absolute;
-    inset: 0; /* top:0 left:0 right:0 bottom:0 */
+    inset: 0;
     width: 100%;
     height: 100%;
-    display: flex; /* ✅ center system */
-    align-items: center; /* ✅ vertical center */
-    justify-content: center; /* ✅ horizontal center */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     background: rgba(0, 0, 0, 0.2);
     z-index: 10;
     padding: 20px;
 }
 
-.mw-500 {
-    max-width: 520px;
-    margin: 0 auto;
-}
-
-/* Typography & Content Overlay */
-.hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.1); /* Subtle dark wash */
-    z-index: 10;
-}
-
-.main-title {
-    font-family: var(--title-font);
-    line-height: 1;
-    font-size: clamp(3rem, 8vw, 6rem);
-}
-
-.ls-2 {
-    letter-spacing: 3px;
-}
-
-.mw-500 {
-    max-width: 500px;
-    font-size: 1rem;
-    opacity: 0.9;
-}
-
-.btn-light {
-    border: none;
-    font-size: 0.85rem;
-    letter-spacing: 1px;
-}
-
-/* Responsive adjustments */
 @media (max-width: 768px) {
-    .hero-panel {
-        height: 33.33vh;
-    }
+    /* 1. Hero Section ko Navbar se niche push karein */
     .hero-section {
-        display: flex;
-        flex-direction: column;
+        margin-top: 65px !important; /* Navbar ki height ke mutabiq adjust karein */
+        height: auto !important;
+        min-height: auto !important;
+        position: relative !important;
+        overflow: hidden;
     }
-    .main-title {
-        font-size: 3.5rem;
+
+    /* 2. Image Container ka ratio 16:9 set karein (Zero Cut) */
+    .hero-slide {
+        aspect-ratio: 16 / 9 !important; /* Yeh image ko katne nahi dega */
+        height: auto !important;
+        min-height: 250px; /* Bohat chota na ho jaye isliye */
+        background-size: cover !important; /* Ya '100% 100%' agar stretch karna ho */
+        background-position: center top !important;
+        position: relative !important;
+    }
+
+    /* 3. Text ko Wapis Image ke Upar Layein (Overlay) */
+    .hero-overlay {
+        position: absolute !important; /* Relative se wapis Absolute kiya */
+        inset: 0 !important; /* Top, Left, Right, Bottom sab 0 */
+        background: rgba(0, 0, 0, 0.4) !important; /* Image ke upar halka dark layer taake text dikhe */
+        display: flex !important;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 15px !important;
+    }
+
+    /* 4. Text sizes ko mobile ke liye chota karein */
+    .display-1 {
+        font-size: 1.8rem !important; /* Size chota kiya taake image ke andar fit aaye */
+        margin-bottom: 8px !important;
+    }
+
+    .hero-content p.lead {
+        font-size: 0.85rem !important;
+        max-width: 90% !important;
+        margin-bottom: 15px !important;
+    }
+
+    .hero-content .btn {
+        padding: 8px 20px !important;
+        font-size: 0.8rem !important;
     }
 }
-
 /* Typography for Section */
 .section-title {
     font-family: "Playfair Display", serif;
@@ -639,7 +619,6 @@ body {
         font-size: 1.1rem;
     }
 }
-
 
 .footer {
     /* Subtle top border like image reference */

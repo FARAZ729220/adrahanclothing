@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg fixed-top custom-nav {{ request()->routeIs('home') ? '' : 'nav-scrolled' }}">
+<nav class="navbar navbar-expand-lg fixed-top custom-nav nav-scrolled">
     <div class="container-fluid nav-shell px-3 px-lg-5">
 
         <!-- LEFT : LOGO -->
