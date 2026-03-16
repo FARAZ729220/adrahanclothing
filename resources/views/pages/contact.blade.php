@@ -119,4 +119,21 @@
             </div>
         </div>
     </section>
+
+    @if (session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                if (typeof fbq !== 'function') {
+                    console.log('[Pixel] fbq not available');
+                    return;
+                }
+
+                fbq('track', 'Contact', {
+                    content_name: 'Contact Form',
+                    content_category: 'Lead',
+                    status: 'submitted'
+                });
+            });
+        </script>
+    @endif
 </x-layout>

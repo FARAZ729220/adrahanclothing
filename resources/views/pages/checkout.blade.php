@@ -1,150 +1,26 @@
 <x-layout title="Checkout | Adrahan">
-    {{-- <section style="padding:140px 0;">
-        <div class="container">
 
-            <div class="d-flex align-items-center justify-content-between mb-4">
-                <h2 class="text-white fw-black m-0">Checkout</h2>
-                <a href="{{ route('cart.index') }}" class="text-light opacity-75">← Back to Cart</a>
-            </div>
+    @php
+        $pixelContentIds = collect($items)
+            ->map(function ($it) {
+                return (string) ($it['product_id'] ?? ($it['id'] ?? $it['name']));
+            })
+            ->values();
 
+        $pixelContents = collect($items)
+            ->map(function ($it) {
+                return [
+                    'id' => (string) ($it['product_id'] ?? ($it['id'] ?? $it['name'])),
+                    'quantity' => (int) ($it['qty'] ?? 1),
+                    'item_price' => (float) ($it['price'] ?? 0),
+                ];
+            })
+            ->values();
 
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $e)
-                            <li>{{ $e }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-
-            <div class="row g-4">
-
-
-                <div class="col-lg-7">
-                    <div class="p-4 rounded-4" style="background:#0b1220;">
-                        <form action="{{ route('checkout.place') }}" method="POST" enctype="multipart/form-data" id="checkoutForm">
-                            @csrf
-
-                            <div class="mb-3">
-                                <label class="text-white mb-1">Full Name</label>
-                                <input name="name" class="form-control" required value="{{ old('name') }}">
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="text-white mb-1">Email (optional)</label>
-                                <input name="email" type="email" class="form-control" value="{{ old('email') }}">
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="text-white mb-1">Phone</label>
-                                <input name="phone" class="form-control" required value="{{ old('phone') }}">
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="text-white mb-1">Shipping Address</label>
-                                <textarea name="shipping_address" class="form-control" rows="4" required>{{ old('shipping_address') }}</textarea>
-                            </div>
-
-                            <hr class="border-secondary my-4">
-
-                            <div class="mb-2">
-                                <label class="text-white fw-bold mb-2">Payment Method</label>
-
-                                <div class="d-flex gap-3 flex-wrap">
-                                    <label class="btn btn-outline-light">
-                                        <input type="radio" name="payment_method" value="cod"
-                                            {{ old('payment_method', 'cod') === 'cod' ? 'checked' : '' }}>
-                                        COD
-                                    </label>
-
-                                    <label class="btn btn-outline-light">
-                                        <input type="radio" name="payment_method" value="online_manual"
-                                            {{ old('payment_method') === 'online_manual' ? 'checked' : '' }}>
-                                        Online (Manual)
-                                    </label>
-                                </div>
-                            </div>
-
-
-                            <div id="manualBox" class="p-3 rounded-3 mt-3" style="background:#111c33; display:none;">
-                                <p class="text-white mb-1 fw-bold">Payment Details</p>
-                                <div class="text-light">
-                                    <div>{{ $account['title'] }}</div>
-                                    <div class="mt-1">
-                                        Account:
-                                        <span class="text-white fw-bold">{{ $account['number'] }}</span>
-                                    </div>
-                                    <div class="small opacity-75 mt-2">{{ $account['note'] }}</div>
-                                </div>
-
-                                <div class="mt-3">
-                                    <label class="text-white mb-1">Upload Payment Screenshot <span class="text-danger">*</span></label>
-                                    <input type="file" name="payment_proof" class="form-control" accept="image/*" id="paymentProof">
-                                    <div class="small text-light opacity-75 mt-1">
-                                        jpg/png/webp • max 2MB
-                                    </div>
-                                </div>
-
-                                <div class="mt-3">
-                                    <label class="text-white mb-1">Reference Note (optional)</label>
-                                    <input type="text" name="payment_reference_note" class="form-control"
-                                        value="{{ old('payment_reference_note') }}" placeholder="Txn id / sender name">
-                                </div>
-                            </div>
-
-                            <button class="btn btn-gradient w-100 py-3 rounded-pill fw-bold text-uppercase mt-4" id="placeOrderBtn">
-                                Place Order
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-
-                <div class="col-lg-5">
-                    <div class="p-4 rounded-4" style="background:#0b1220;">
-                        <h5 class="text-white mb-3">Order Summary</h5>
-
-                        @foreach ($items as $it)
-                            <div class="d-flex justify-content-between text-light mb-2">
-                                <div>
-                                    <div class="text-white fw-semibold">{{ $it['name'] }}</div>
-                                    <div class="small opacity-75">
-                                        Size: {{ $it['size'] }} • Qty: {{ $it['qty'] }}
-                                    </div>
-                                </div>
-                                <div class="text-white fw-bold">
-                                    Rs {{ number_format(((float)$it['price']) * ((int)$it['qty'])) }}
-                                </div>
-                            </div>
-                            <hr class="border-secondary">
-                        @endforeach
-
-                        <div class="d-flex justify-content-between text-light mb-2">
-                            <span>Subtotal</span>
-                            <span>Rs {{ number_format($subtotal) }}</span>
-                        </div>
-
-                        <div class="d-flex justify-content-between text-light mb-2">
-                            <span>Shipping</span>
-                            <span>Rs {{ number_format($shipping) }}</span>
-                        </div>
-
-                        <div class="d-flex justify-content-between text-white fw-bold mt-3">
-                            <span>Total</span>
-                            <span>Rs {{ number_format($total) }}</span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section> --}}
-
+        $pixelNumItems = collect($items)->sum(function ($it) {
+            return (int) ($it['qty'] ?? 1);
+        });
+    @endphp
     <section class="checkout-page bg-white reveal" style="padding:100px 0;">
         <div class="container py-lg-4">
 
@@ -159,24 +35,12 @@
                 </a>
             </div>
 
-            {{-- Errors / success --}}
-            {{-- @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $e)
-                            <li>{{ $e }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif --}}
-
             @if (session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
 
             <div class="row g-5">
 
-                {{-- LEFT: FORM --}}
                 <div class="col-lg-7 reveal-left">
                     <div class="checkout-card border p-4">
 
@@ -194,8 +58,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label class="fw-bold small mb-2 d-block">Email <span
-                                        class="text-muted"></span></label>
+                                <label class="fw-bold small mb-2 d-block">Email <span class="text-muted"></span></label>
                                 <input name="email" type="email"
                                     class="form-control rounded-0 @error('email') is-invalid @enderror"
                                     value="{{ old('email') }}">
@@ -247,7 +110,6 @@
                                 @enderror
                             </div>
 
-                            {{-- Manual Payment Box --}}
                             <div id="manualBox" class="manual-box border p-3 mt-3" style="display:none;">
                                 <p class="fw-bold mb-2">Payment Details</p>
 
@@ -281,8 +143,9 @@
                                         class="form-control rounded-0 @error('payment_proof') is-invalid @enderror"
                                         accept="image/*" id="paymentProof">
                                     <div class="small text-muted mt-1">jpg/png/webp • max 2MB</div>
-                                    <small class="text-danger d-none mt-1" id="proofError">Payment screenshot is
-                                        required.</small>
+                                    <small class="text-danger d-none mt-1" id="proofError">
+                                        Payment screenshot is required.
+                                    </small>
                                     @error('payment_proof')
                                         <small class="text-danger d-block mt-1">{{ $message }}</small>
                                     @enderror
@@ -309,7 +172,6 @@
                     </div>
                 </div>
 
-                {{-- RIGHT: SUMMARY --}}
                 <div class="col-lg-5 reveal-right">
                     <div class="checkout-card border p-4 checkout-summary">
 
@@ -355,71 +217,90 @@
             </div>
         </div>
     </section>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkoutForm = document.getElementById('checkoutForm');
+        const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
+        const manualBox = document.getElementById('manualBox');
+        const paymentProof = document.getElementById('paymentProof');
+        const proofError = document.getElementById('proofError');
+
+        const total = {{ json_encode((float) $total) }};
+        const currency = 'PKR';
+
+        const contentIds = @json($pixelContentIds);
+        const contents = @json($pixelContents);
+
+        let addPaymentInfoTracked = false;
+
+        if (typeof fbq === 'function') {
+            fbq('track', 'InitiateCheckout', {
+                content_type: 'product',
+                content_ids: contentIds,
+                contents: contents,
+                num_items: {{ $pixelNumItems }},
+                value: total,
+                currency: currency
+            });
+        } else {
+            console.log('[Pixel] fbq not available');
+        }
+
+        function getSelectedPaymentMethod() {
+            return document.querySelector('input[name="payment_method"]:checked')?.value;
+        }
+
+        function toggleManualBox() {
+            const selected = getSelectedPaymentMethod();
+
+            if (selected === 'online_manual') {
+                manualBox.style.display = 'block';
+                paymentProof?.setAttribute('required', 'required');
+
+                if (!addPaymentInfoTracked && typeof fbq === 'function') {
+                    fbq('track', 'AddPaymentInfo', {
+                        content_type: 'product',
+                        content_ids: contentIds,
+                        contents: contents,
+                        value: total,
+                        num_items: {{ $pixelNumItems }},
+                        currency: currency
+                    });
+                    addPaymentInfoTracked = true;
+                }
+            } else {
+                manualBox.style.display = 'none';
+                paymentProof?.removeAttribute('required');
+                proofError?.classList.add('d-none');
+            }
+        }
+
+        paymentRadios.forEach(radio => {
+            radio.addEventListener('change', toggleManualBox);
+        });
+
+        toggleManualBox();
+
+        checkoutForm?.addEventListener('submit', function (e) {
+            const selected = getSelectedPaymentMethod();
+
+            if (!checkoutForm.checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+                checkoutForm.reportValidity();
+                return;
+            }
+
+            if (selected === 'online_manual' && paymentProof && !paymentProof.files.length) {
+                e.preventDefault();
+                proofError?.classList.remove('d-none');
+                paymentProof.focus();
+                return;
+            }
+
+            proofError?.classList.add('d-none');
+        });
+    });
+</script>
 </x-layout>
-
-<script>
-    const manualBox = document.getElementById('manualBox');
-    const paymentProof = document.getElementById('paymentProof');
-    const radios = document.querySelectorAll('input[name="payment_method"]');
-
-    function toggleManual() {
-        const selected = document.querySelector('input[name="payment_method"]:checked')?.value;
-
-        if (selected === 'online_manual') {
-            manualBox.style.display = 'block';
-            if (paymentProof) paymentProof.required = true; // ✅ front-end required
-        } else {
-            manualBox.style.display = 'none';
-            if (paymentProof) paymentProof.required = false;
-        }
-    }
-
-    radios.forEach(r => r.addEventListener('change', toggleManual));
-    toggleManual();
-</script>
-<script>
-    const checkoutForm = document.getElementById('checkoutForm');
-    const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
-    const manualBox = document.getElementById('manualBox');
-    const paymentProof = document.getElementById('paymentProof');
-    const proofError = document.getElementById('proofError');
-
-    function toggleManualBox() {
-        const selected = document.querySelector('input[name="payment_method"]:checked')?.value;
-
-        if (selected === 'online_manual') {
-            manualBox.style.display = 'block';
-            paymentProof.setAttribute('required', 'required');
-        } else {
-            manualBox.style.display = 'none';
-            paymentProof.removeAttribute('required');
-            proofError.classList.add('d-none');
-        }
-    }
-
-    paymentRadios.forEach(radio => {
-        radio.addEventListener('change', toggleManualBox);
-    });
-
-    toggleManualBox();
-
-    checkoutForm.addEventListener('submit', function(e) {
-        const selected = document.querySelector('input[name="payment_method"]:checked')?.value;
-
-        if (!checkoutForm.checkValidity()) {
-            e.preventDefault();
-            e.stopPropagation();
-            checkoutForm.reportValidity();
-            return;
-        }
-
-        if (selected === 'online_manual' && !paymentProof.files.length) {
-            e.preventDefault();
-            proofError.classList.remove('d-none');
-            paymentProof.focus();
-            return;
-        }
-
-        proofError.classList.add('d-none');
-    });
-</script>

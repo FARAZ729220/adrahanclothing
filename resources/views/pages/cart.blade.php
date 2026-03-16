@@ -2,9 +2,28 @@
 
     @php
         $isEmpty = $cartItems->count() === 0;
+
+        $pixelContentIds = collect($cartItems)
+            ->map(function ($item) {
+                return (string) ($item['product_id'] ?? ($item['id'] ?? $item['name']));
+            })
+            ->values();
+
+        $pixelContents = collect($cartItems)
+            ->map(function ($item) {
+                return [
+                    'id' => (string) ($item['product_id'] ?? ($item['id'] ?? $item['name'])),
+                    'quantity' => (int) ($item['qty'] ?? 1),
+                    'item_price' => (float) ($item['price'] ?? 0),
+                ];
+            })
+            ->values();
+
+        $pixelNumItems = collect($cartItems)->sum(function ($item) {
+            return (int) ($item['qty'] ?? 1);
+        });
     @endphp
 
-    {{-- EMPTY CART --}}
     @if ($isEmpty)
         <section class="cart-empty-section d-flex align-items-center justify-content-center bg-white">
             <div class="container text-center py-5">
@@ -29,19 +48,12 @@
             </div>
         </section>
     @else
-        {{-- CART WITH ITEMS --}}
-
-
         <section class="cart-section py-5 bg-white">
             <div class="container py-5">
-
                 <h1 class="display-4 fw-bold section-title mb-5">Shopping Cart</h1>
 
                 <div class="row g-5">
-
-                    {{-- LEFT: Cart Items --}}
                     <div class="col-lg-8">
-
                         @forelse ($cartItems as $item)
                             @php
                                 $img = !empty($item['img'])
@@ -59,19 +71,14 @@
 
                             <div class="cart-item border p-3 d-flex align-items-center position-relative mb-3"
                                 id="row-{{ $key }}" data-key="{{ $key }}">
-
-                                {{-- Image --}}
                                 <div class="cart-img-box me-4">
                                     <img src="{{ $img }}" alt="{{ $item['name'] }}" class="img-fluid"
                                         style="width:90px;height:90px;object-fit:cover;">
                                 </div>
 
-                                {{-- Details --}}
                                 <div class="cart-details flex-grow-1">
-
                                     <h5 class="fw-bold mb-1">{{ $item['name'] }}</h5>
 
-                                    {{-- Optional meta row --}}
                                     <div class="d-flex flex-wrap gap-3 align-items-center mb-2">
                                         @if ($size)
                                             <small class="text-muted">Size: <span
@@ -81,7 +88,6 @@
                                                 class="fw-semibold">{{ $stock }}</span></small>
                                     </div>
 
-                                    {{-- Price Row --}}
                                     <div class="d-flex flex-wrap gap-3 align-items-center mb-3">
                                         <span class="new-price fw-bold">
                                             Rs {{ number_format($unitPrice) }}
@@ -95,7 +101,6 @@
                                         </small>
                                     </div>
 
-                                    {{-- Quantity Controls --}}
                                     <div class="d-flex align-items-center quantity-group">
                                         <button type="button"
                                             class="btn btn-light btn-sm border rounded-0 px-3 qty-minus"
@@ -108,27 +113,21 @@
                                             class="btn btn-light btn-sm border rounded-0 px-3 qty-plus"
                                             data-key="{{ $key }}">+</button>
                                     </div>
-
                                 </div>
 
-                                {{-- Remove --}}
                                 <button type="button"
                                     class="btn border-0 position-absolute top-50 end-0 translate-middle-y me-3 text-muted remove-item"
                                     data-key="{{ $key }}" aria-label="Remove item">
                                     <i class="bi bi-trash3"></i>
                                 </button>
-
                             </div>
-
                         @empty
                             <div class="text-center py-5">
                                 <p class="mb-0 text-muted">Your cart is empty.</p>
                             </div>
                         @endforelse
-
                     </div>
 
-                    {{-- RIGHT: Summary --}}
                     <div class="col-lg-4">
                         <div class="summary-card border p-4">
                             <h4 class="fw-bold mb-4">Order Summary</h4>
@@ -156,175 +155,176 @@
                             </a>
                         </div>
                     </div>
-
                 </div>
             </div>
         </section>
     @endif
 
-</x-layout>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof fbq === 'function' && !@json($isEmpty)) {
+                fbq('trackCustom', 'ViewCart', {
+                    content_type: 'product',
+                    content_ids: @json($pixelContentIds),
+                    contents: @json($pixelContents),
+                    num_items: {{ (int) $pixelNumItems }},
+                    value: {{ json_encode((float) $total) }},
+                    currency: 'PKR'
+                });
+            }
+        });
 
-<script>
-    const CART_UPDATE_URL = "{{ route('cart.update') }}";
-    const CART_REMOVE_URL = "{{ route('cart.remove') }}";
-    const CSRF = "{{ csrf_token() }}";
+        const CART_UPDATE_URL = "{{ route('cart.update') }}";
+        const CART_REMOVE_URL = "{{ route('cart.remove') }}";
+        const CSRF = "{{ csrf_token() }}";
 
-    function money(n) {
-        return 'Rs ' + Number(n).toLocaleString('en-PK');
-    }
+        function money(n) {
+            return 'Rs ' + Number(n).toLocaleString('en-PK');
+        }
 
-    function applyCartResponse(res) {
-        // totals
-        const sub = document.getElementById('subtotalText');
-        const tot = document.getElementById('totalText');
-        const ship = document.getElementById('shippingText');
+        function applyCartResponse(res) {
+            const sub = document.getElementById('subtotalText');
+            const tot = document.getElementById('totalText');
+            const ship = document.getElementById('shippingText');
 
-        if (ship) ship.innerText = money(res.shipping);
-        if (sub && typeof res.subtotal !== 'undefined') sub.innerText = money(res.subtotal);
-        if (tot && typeof res.total !== 'undefined') tot.innerText = money(res.total);
+            if (ship) ship.innerText = money(res.shipping);
+            if (sub && typeof res.subtotal !== 'undefined') sub.innerText = money(res.subtotal);
+            if (tot && typeof res.total !== 'undefined') tot.innerText = money(res.total);
 
-        // badge
-        const badge = document.getElementById('cartCountBadge');
-        if (typeof res.cart_count !== 'undefined') {
-            if (res.cart_count > 0) {
-                if (badge) {
-                    badge.innerText = res.cart_count;
-                    badge.style.display = 'inline-block';
+            const badge = document.getElementById('cartCountBadge');
+            if (typeof res.cart_count !== 'undefined') {
+                if (res.cart_count > 0) {
+                    if (badge) {
+                        badge.innerText = res.cart_count;
+                        badge.style.display = 'inline-block';
+                    }
+                } else {
+                    if (badge) badge.style.display = 'none';
                 }
-            } else {
-                if (badge) badge.style.display = 'none';
+            }
+
+            if (res.removed_key) {
+                const row = document.getElementById('row-' + res.removed_key);
+                if (row) row.remove();
+            }
+
+            if (res.is_empty) {
+                location.reload();
             }
         }
 
-        // remove row if server removed
-        if (res.removed_key) {
-            const row = document.getElementById('row-' + res.removed_key);
-            if (row) row.remove();
+        async function post(url, data) {
+            const resp = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": CSRF,
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            const json = await resp.json();
+
+            if (!resp.ok) {
+                alert(json.message || "Something went wrong");
+                return null;
+            }
+
+            return json;
         }
 
-        // if empty, reload to show empty section
-        if (res.is_empty) {
-            location.reload();
-        }
-    }
+        document.addEventListener('click', async function(e) {
+            const btn = e.target.closest('.qty-plus');
+            if (!btn) return;
 
-    async function post(url, data) {
-        const resp = await fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": CSRF,
-                "Accept": "application/json"
-            },
-            body: JSON.stringify(data)
+            const key = btn.dataset.key;
+            const qtyEl = document.getElementById('qty-' + key);
+
+            let qty = parseInt(qtyEl.innerText || "0");
+            qty++;
+
+            const res = await post(CART_UPDATE_URL, {
+                key,
+                qty
+            });
+            if (!res) return;
+
+            if (res.updated_key) {
+                qtyEl.innerText = res.qty;
+
+                const line = document.getElementById('line-' + key);
+                if (line) line.innerText = money(res.line_total);
+            }
+
+            applyCartResponse(res);
         });
 
-        const json = await resp.json();
+        document.addEventListener('click', async function(e) {
+            const btn = e.target.closest('.qty-minus');
+            if (!btn) return;
 
-        if (!resp.ok) {
-            alert(json.message || "Something went wrong");
-            return null;
-        }
+            const key = btn.dataset.key;
+            const qtyEl = document.getElementById('qty-' + key);
 
-        return json;
-    }
+            let qty = parseInt(qtyEl.innerText || "0");
+            qty--;
+            if (qty < 0) qty = 0;
 
-    // PLUS
-    document.addEventListener('click', async function(e) {
-        const btn = e.target.closest('.qty-plus');
-        if (!btn) return;
+            const res = await post(CART_UPDATE_URL, {
+                key,
+                qty
+            });
+            if (!res) return;
 
-        const key = btn.dataset.key;
-        const qtyEl = document.getElementById('qty-' + key);
+            if (res.updated_key) {
+                qtyEl.innerText = res.qty;
 
-        let qty = parseInt(qtyEl.innerText || "0");
-        qty++;
+                const line = document.getElementById('line-' + key);
+                if (line) line.innerText = money(res.line_total);
+            }
 
-        const res = await post(CART_UPDATE_URL, {
-            key,
-            qty
-        });
-        if (!res) return;
-
-        if (res.updated_key) {
-            qtyEl.innerText = res.qty;
-
-            const line = document.getElementById('line-' + key);
-            if (line) line.innerText = money(res.line_total);
-        }
-
-        applyCartResponse(res);
-    });
-
-    // MINUS
-    document.addEventListener('click', async function(e) {
-        const btn = e.target.closest('.qty-minus');
-        if (!btn) return;
-
-        const key = btn.dataset.key;
-        const qtyEl = document.getElementById('qty-' + key);
-
-        let qty = parseInt(qtyEl.innerText || "0");
-        qty--;
-        if (qty < 0) qty = 0;
-
-        const res = await post(CART_UPDATE_URL, {
-            key,
-            qty
-        });
-        if (!res) return;
-
-        if (res.updated_key) {
-            qtyEl.innerText = res.qty;
-
-            const line = document.getElementById('line-' + key);
-            if (line) line.innerText = money(res.line_total);
-        }
-
-        applyCartResponse(res);
-    });
-
-
-    // REMOVE with SweetAlert
-    document.addEventListener('click', async function(e) {
-
-        const btn = e.target.closest('.remove-item');
-        if (!btn) return;
-
-        const key = btn.dataset.key;
-
-        const result = await Swal.fire({
-            title: 'Remove Item?',
-            text: "This item will be removed from your cart.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#7c3aed', // matches your purple theme
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Yes, remove it',
-            cancelButtonText: 'Cancel',
-            background: '#0f172a',
-            color: '#fff',
-            backdrop: 'rgba(0,0,0,0.6)'
+            applyCartResponse(res);
         });
 
-        if (!result.isConfirmed) return;
+        document.addEventListener('click', async function(e) {
+            const btn = e.target.closest('.remove-item');
+            if (!btn) return;
 
-        const res = await post(CART_REMOVE_URL, {
-            key
+            const key = btn.dataset.key;
+
+            const result = await Swal.fire({
+                title: 'Remove Item?',
+                text: "This item will be removed from your cart.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#7c3aed',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, remove it',
+                cancelButtonText: 'Cancel',
+                background: '#0f172a',
+                color: '#fff',
+                backdrop: 'rgba(0,0,0,0.6)'
+            });
+
+            if (!result.isConfirmed) return;
+
+            const res = await post(CART_REMOVE_URL, {
+                key
+            });
+            if (!res) return;
+
+            await Swal.fire({
+                icon: 'success',
+                title: 'Removed!',
+                text: 'Item removed from cart.',
+                timer: 1200,
+                showConfirmButton: false,
+                background: '#0f172a',
+                color: '#fff'
+            });
+
+            applyCartResponse(res);
         });
-        if (!res) return;
-
-        // Optional: small success animation
-        await Swal.fire({
-            icon: 'success',
-            title: 'Removed!',
-            text: 'Item removed from cart.',
-            timer: 1200,
-            showConfirmButton: false,
-            background: '#0f172a',
-            color: '#fff'
-        });
-
-        applyCartResponse(res);
-    });
-</script>
+    </script>
+</x-layout>
