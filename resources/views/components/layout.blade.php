@@ -40,6 +40,9 @@
 
      {{ $scripts ?? '' }}
 
+
+
+
      <script>
          window.setCartBadge = function(count) {
              const badge = document.getElementById('cartCountBadge');
@@ -118,6 +121,8 @@
              }
          });
      </script>
+
+     <x-chat />
  </body>
 
  </html>
